@@ -6,6 +6,8 @@ The goal is to recommend gradient-boosted decision trees (GBDTs) or deep network
 
 The project builds on [A Data-Centric Perspective on Evaluating Machine Learning Models for Tabular Data](https://arxiv.org/abs/2407.02112) and its [reference code](https://github.com/atschalz/dc_tabeval). [OpenML](https://www.openml.org/search?type=data) is the planned dataset source.
 
+The reference study uses ten Kaggle competition datasets to examine the effects of preprocessing, feature engineering, and hyperparameter tuning on model rankings. Our extension asks whether dataset meta-features can predict a useful model choice on unseen datasets, including clinical data.
+
 ## Setup
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and run from the repository root:
@@ -47,3 +49,9 @@ make test
 The starter includes meta-feature extraction, a GBDT/MLP demo, and tests. OpenML loading, benchmarking across datasets, recommender training, and evaluation on held-out datasets are still to be implemented.
 
 Local data and generated artifacts are ignored by Git.
+
+## Planned experiment
+
+Compare tuned HistGradientBoosting and MLP pipelines on binary classification datasets, then learn to select between them from dataset meta-features. See the [experiment protocol](docs/experiment-protocol.md) for the planned evaluation; it is not yet implemented by the CLI or demo.
+
+Next: register five pilot datasets and build the dataset loader and benchmark runner.
