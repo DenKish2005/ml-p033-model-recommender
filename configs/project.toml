@@ -1,0 +1,18 @@
+[project]
+id = "CSCI447P033"
+title = "Dataset-aware model recommendation for clinical tabular data"
+contributors = ["Daniyar Kshibekov", "Yerassyl Auyeskhan"]
+
+[reference]
+title = "A Data-Centric Perspective on Evaluating Machine Learning Models for Tabular Data"
+repository = "https://github.com/atschalz/dc_tabeval"
+commit = "433b01652bc1f3165048c55912b99fa8c633d583"
+paper = "https://arxiv.org/abs/2407.02112"
+
+[research]
+objective = "Predict model choice from dataset meta-features and evaluate transfer to clinical tabular data."
+status = "Experiment scaffold; no trained recommender yet."
+meta_features = ["sample size", "feature count", "categorical fraction", "missingness", "class imbalance"]
+evaluation_unit = "dataset"
+recommender_evaluation = "Hold out entire datasets; compare against the best fixed model and an oracle."
+clinical_evaluation = "Use patient-grouped or temporal splits when required by dataset structure."

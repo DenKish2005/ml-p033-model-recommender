@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling==1.32.3"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ml-p033-model-recommender"
+version = "0.1.0"
+description = "CSCI447P033: dataset meta-features for tabular model selection, extended to clinical data"
+requires-python = ">=3.14.7,<3.15"
+authors = [
+  {name = "Daniyar Kshibekov"},
+  {name = "Yerassyl Auyeskhan"},
+]
+dependencies = [
+    "numpy>=2.5.3",
+    "pandas>=3.0.6",
+    "scikit-learn>=1.9.1",
+]
+
+[project.scripts]
+p033 = "model_recommender.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/model_recommender"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.8",
+]
+
+[tool.uv]
+prerelease = "disallow"
