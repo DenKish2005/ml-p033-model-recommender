@@ -1,0 +1,7 @@
+[experiment]
+name = "clinical_transfer"
+seed = 42
+train_domain = "general"
+test_domain = "clinical"
+retrain_on_clinical = false
+status = "planned"

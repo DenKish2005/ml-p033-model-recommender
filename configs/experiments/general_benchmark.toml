@@ -1,0 +1,6 @@
+[experiment]
+name = "general_dataset_benchmark"
+seed = 42
+preprocessing = "minimalistic"
+compare_families = ["GBDT", "DNN"]
+status = "planned"

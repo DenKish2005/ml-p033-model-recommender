@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ModelRun",
+  "type": "object",
+  "required": [
+    "dataset_id",
+    "model",
+    "family",
+    "metric",
+    "score",
+    "seed",
+    "status"
+  ],
+  "properties": {
+    "dataset_id": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "family": {
+      "enum": [
+        "GBDT",
+        "DNN",
+        "OTHER"
+      ]
+    },
+    "metric": {
+      "type": "string"
+    },
+    "score": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "status": {
+      "enum": [
+        "success",
+        "failure",
+        "skipped"
+      ]
+    },
+    "runtime_seconds": {
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  }
+}
