@@ -1,0 +1,9 @@
+# Clinical tabular dataset-pool configuration.
+# Datasets must be public/legally usable and checked for patient-level leakage.
+[source]
+provider = "to_be_decided"
+
+[selection]
+clinical = true
+require_license_review = true
+require_group_or_temporal_split_review = true
