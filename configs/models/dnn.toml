@@ -1,0 +1,4 @@
+# Family-level benchmark configuration.
+[family]
+name = "DNN"
+models = ["mlp_plr", "resnet", "ft_transformer"]

@@ -1,0 +1,4 @@
+# Family-level benchmark configuration.
+[family]
+name = "GBDT"
+models = ["xgboost", "catboost", "lightgbm"]

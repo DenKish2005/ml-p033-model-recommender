@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DatasetRegistryRow",
+  "type": "object",
+  "required": [
+    "dataset_id",
+    "name",
+    "source",
+    "task_type",
+    "target",
+    "clinical_flag"
+  ],
+  "properties": {
+    "dataset_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "task_type": {
+      "enum": [
+        "classification",
+        "regression"
+      ]
+    },
+    "target": {
+      "type": "string"
+    },
+    "clinical_flag": {
+      "type": "boolean"
+    },
+    "license": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MetaDatasetRow",
+  "type": "object",
+  "required": [
+    "dataset_id",
+    "winner_family",
+    "performance_gap"
+  ],
+  "properties": {
+    "dataset_id": {
+      "type": "string"
+    },
+    "winner_family": {
+      "enum": [
+        "GBDT",
+        "DNN"
+      ]
+    },
+    "performance_gap": {
+      "type": "number"
+    }
+  },
+  "additionalProperties": true
+}
