@@ -17,3 +17,7 @@ This scaffold complements the existing starter without replacing any existing fi
 ## Important
 
 The current repository ignores `data/` and `artifacts/`. Those directories are local working storage and are not expected to be committed. Tracked schemas live in `schemas/`, while reproducible summaries/figures live in `results/`.
+
+## Current implementation
+
+The initial experiment follows [the protocol](docs/experiment-protocol.md). The pilot registry is `configs/datasets.toml`; `datasets.py` implements its validation, caching, and loading. Separate `registry.py` and `openml_loader.py` modules are reserved placeholders, not alternative implementations. Experiment configs and remaining pipeline modules are plans, not an implemented benchmark runner.
