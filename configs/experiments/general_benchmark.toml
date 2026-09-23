@@ -1,6 +1,7 @@
 [experiment]
 name = "general_dataset_benchmark"
-seed = 42
-preprocessing = "minimalistic"
+seeds = [42, 137, 2026]
+task_type = "binary_classification"
+protocol = "docs/experiment-protocol.md"
 compare_families = ["GBDT", "DNN"]
 status = "planned"

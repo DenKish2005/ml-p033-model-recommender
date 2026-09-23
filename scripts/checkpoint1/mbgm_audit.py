@@ -3,10 +3,12 @@
 
 import argparse
 from pathlib import Path
+
 import pandas as pd
 
 TARGET = "y"
 ID_COL = "ID"
+
 
 def _missing(df: pd.DataFrame, name: str) -> None:
     missing = df.isna().sum()
@@ -18,10 +20,14 @@ def _missing(df: pd.DataFrame, name: str) -> None:
         for col, count in nonzero.items():
             print(f"  {col}: {int(count)}")
 
+
 def _overlap(left: pd.DataFrame, right: pd.DataFrame, cols: list[str]) -> int:
     if not cols:
         return 0
-    return len(left[cols].drop_duplicates().merge(right[cols].drop_duplicates(), on=cols, how="inner"))
+    return len(
+        left[cols].drop_duplicates().merge(right[cols].drop_duplicates(), on=cols, how="inner")
+    )
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -37,7 +43,9 @@ def main() -> None:
     print("\n1) SHAPES AFTER LOADING")
     print(f"train.shape = {train.shape}")
     print(f"test.shape  = {test.shape}")
-    print(f"number of predictors in train = {train.shape[1] - (1 if TARGET in train.columns else 0)}")
+    print(
+        f"number of predictors in train = {train.shape[1] - (1 if TARGET in train.columns else 0)}"
+    )
 
     print("\n2) FIRST FIVE TRAIN ROWS — PLAIN TEXT")
     with pd.option_context("display.max_columns", None, "display.width", None):
@@ -55,7 +63,11 @@ def main() -> None:
         print(f"target std    = {y.std()}")
 
     predictor_cols = [c for c in train.columns if c != TARGET]
-    categorical_cols = [c for c in predictor_cols if train[c].dtype == "object" or str(train[c].dtype).startswith("category")]
+    categorical_cols = [
+        c
+        for c in predictor_cols
+        if train[c].dtype == "object" or str(train[c].dtype).startswith("category")
+    ]
     print("\nFEATURE TYPES IN LOADED TRAIN FILE")
     print(f"predictor count       = {len(predictor_cols)}")
     print(f"categorical count     = {len(categorical_cols)}")
@@ -66,15 +78,31 @@ def main() -> None:
 
     print("\n5) TRAIN/TEST OVERLAP CHECK")
     common = [c for c in predictor_cols if c in test.columns]
-    print(f"exact unique predictor rows shared between train and test (including ID): {_overlap(train, test, common)}")
+    print(
+        f"exact unique predictor rows shared between train and test (including ID): "
+        f"{_overlap(train, test, common)}"
+    )
     signature = [c for c in common if c != ID_COL]
-    print(f"unique predictor signatures shared between train and test (excluding ID): {_overlap(train, test, signature)}")
+    print(
+        f"unique predictor signatures shared between train and test (excluding ID): "
+        f"{_overlap(train, test, signature)}"
+    )
     if signature:
-        print(f"train rows belonging to a duplicated predictor signature (excluding ID): {int(train.duplicated(subset=signature, keep=False).sum())}")
-        print(f"test rows belonging to a duplicated predictor signature (excluding ID): {int(test.duplicated(subset=signature, keep=False).sum())}")
+        print(
+            f"train rows belonging to a duplicated predictor signature (excluding ID): "
+            f"{int(train.duplicated(subset=signature, keep=False).sum())}"
+        )
+        print(
+            f"test rows belonging to a duplicated predictor signature (excluding ID): "
+            f"{int(test.duplicated(subset=signature, keep=False).sum())}"
+        )
     print("\nCV NOTE")
-    print("For MBGM, the upstream repository uses shuffled 10-fold KFold; there is no permanent validation CSV.")
+    print(
+        "For MBGM, the upstream repository uses shuffled 10-fold KFold; "
+        "there is no permanent validation CSV."
+    )
     print("\n=== END AUDIT ===")
+
 
 if __name__ == "__main__":
     main()
