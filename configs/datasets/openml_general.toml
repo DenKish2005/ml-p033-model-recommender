@@ -1,7 +1,6 @@
-# General OpenML dataset-pool configuration.
-# Fill IDs only after inclusion/exclusion criteria are fixed.
 [source]
 provider = "openml"
+registry = "configs/datasets.toml"
 
 [selection]
 classification_first = true

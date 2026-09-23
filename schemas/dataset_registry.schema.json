@@ -1,48 +1,99 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "DatasetRegistryRow",
+  "description": "One datasets entry in configs/datasets.toml. Validated at runtime by DatasetSpec and load_dataset.",
   "type": "object",
   "required": [
-    "dataset_id",
     "name",
-    "source",
-    "task_type",
+    "openml_id",
+    "version",
+    "md5_checksum",
+    "source_url",
+    "original_source_url",
+    "license",
+    "family",
+    "clinical",
     "target",
-    "clinical_flag"
+    "positive_class",
+    "class_labels",
+    "expected_rows",
+    "numeric_features",
+    "categorical_features",
+    "excluded_features",
+    "split_strategy",
+    "split_notes",
+    "selection_reason"
   ],
   "properties": {
-    "dataset_id": {
-      "type": "string"
-    },
     "name": {
       "type": "string"
     },
-    "source": {
+    "openml_id": {
+      "type": "integer"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "md5_checksum": {
       "type": "string"
     },
-    "task_type": {
-      "enum": [
-        "classification",
-        "regression"
-      ]
+    "source_url": {
+      "type": "string"
+    },
+    "original_source_url": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "family": {
+      "type": "string"
+    },
+    "clinical": {
+      "type": "boolean"
     },
     "target": {
       "type": "string"
     },
-    "clinical_flag": {
-      "type": "boolean"
+    "positive_class": {
+      "type": "string"
     },
-    "license": {
-      "type": [
-        "string",
-        "null"
-      ]
+    "class_labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
-    "notes": {
-      "type": [
-        "string",
-        "null"
-      ]
+    "expected_rows": {
+      "type": "integer"
+    },
+    "numeric_features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "categorical_features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "excluded_features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "split_strategy": {
+      "type": "string"
+    },
+    "split_notes": {
+      "type": "string"
+    },
+    "selection_reason": {
+      "type": "string"
     }
-  }
+  },
+  "additionalProperties": false
 }
