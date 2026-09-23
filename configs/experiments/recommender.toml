@@ -1,7 +1,7 @@
 [experiment]
 name = "meta_model_recommender"
 seed = 42
-evaluation = "leave_one_dataset_out"
+evaluation = "held_out_dataset_families"
 
 [baselines]
 models = ["dummy", "logistic_regression", "decision_tree"]
