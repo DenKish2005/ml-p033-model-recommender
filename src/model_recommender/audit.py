@@ -30,9 +30,7 @@ def audit_dataset(loaded: LoadedDataset) -> dict[str, object]:
         str(label): int(count) for label, count in y.value_counts().sort_index().items()
     }
     missing_by_column = {
-        str(column): int(count)
-        for column, count in X.isna().sum().items()
-        if int(count) > 0
+        str(column): int(count) for column, count in X.isna().sum().items() if int(count) > 0
     }
 
     return {

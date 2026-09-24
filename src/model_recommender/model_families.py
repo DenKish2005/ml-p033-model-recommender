@@ -82,10 +82,7 @@ def mlp_candidates(*, count: int = 20, seed: int = 42) -> list[ModelCandidate]:
         )
     ]
     selected = _sample_with_baseline(grid, MLP_BASELINE, count=count, seed=seed)
-    return [
-        ModelCandidate("DNN", "mlp", order, params)
-        for order, params in enumerate(selected)
-    ]
+    return [ModelCandidate("DNN", "mlp", order, params) for order, params in enumerate(selected)]
 
 
 def candidates_for_family(

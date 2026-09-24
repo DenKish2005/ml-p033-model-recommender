@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import subprocess
+from pathlib import Path
 from time import time
 
 
@@ -49,9 +49,7 @@ def main() -> None:
         "repo": str(repo),
         "git_remote": run(["git", "remote", "-v"], cwd=repo),
         "git_head": run(["git", "rev-parse", "HEAD"], cwd=repo),
-        "git_latest": run(
-            ["git", "log", "-1", "--date=iso", "--format=%H%n%ad%n%s"], cwd=repo
-        ),
+        "git_latest": run(["git", "log", "-1", "--date=iso", "--format=%H%n%ad%n%s"], cwd=repo),
         "python_version": run([args.python, "--version"], cwd=repo),
         "experiment": run([args.python, "run_experiment.py"], cwd=repo),
     }

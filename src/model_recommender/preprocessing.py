@@ -60,7 +60,7 @@ class DensePreprocessor:
         if missing:
             raise ValueError(f"Missing preprocessing columns: {sorted(missing)}")
 
-    def fit_structure(self, X: pd.DataFrame) -> "DensePreprocessor":
+    def fit_structure(self, X: pd.DataFrame) -> DensePreprocessor:
         """Fit imputers/encoder and determine final width without materialising one-hot output."""
 
         self._validate_columns(X)

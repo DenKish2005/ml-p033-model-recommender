@@ -41,7 +41,7 @@ class BenchmarkProtocol:
     recommendation_margin: float = 0.01
 
     @classmethod
-    def full(cls) -> "BenchmarkProtocol":
+    def full(cls) -> BenchmarkProtocol:
         return cls(
             name="full",
             outer_seeds=(42, 137, 2026),
@@ -51,7 +51,7 @@ class BenchmarkProtocol:
         )
 
     @classmethod
-    def smoke(cls) -> "BenchmarkProtocol":
+    def smoke(cls) -> BenchmarkProtocol:
         return cls(
             name="smoke",
             outer_seeds=(42,),
@@ -119,9 +119,7 @@ def _fit_candidate(
     elapsed = perf_counter() - started
     trial["fit_seconds"] = float(trial["fit_seconds"]) + elapsed
     messages = [
-        str(item.message)
-        for item in caught
-        if issubclass(item.category, ConvergenceWarning)
+        str(item.message) for item in caught if issubclass(item.category, ConvergenceWarning)
     ]
     warning_list = trial["convergence_warnings"]
     assert isinstance(warning_list, list)
@@ -305,9 +303,7 @@ def _refit_family(
             "train_dense_bytes": estimate_dense_bytes(
                 len(X_train), preprocessor.n_output_features_
             ),
-            "test_dense_bytes": estimate_dense_bytes(
-                len(X_test), preprocessor.n_output_features_
-            ),
+            "test_dense_bytes": estimate_dense_bytes(len(X_test), preprocessor.n_output_features_),
         }
         estimator = build_estimator(candidate, random_state=outer_seed)
         started = perf_counter()
@@ -405,12 +401,10 @@ def run_benchmark(
     aggregate: dict[str, object] | None = None
     if primary_success:
         gbdt_scores = [
-            item["families"]["GBDT"]["outer_scores"]["balanced_accuracy"]
-            for item in outer_results
+            item["families"]["GBDT"]["outer_scores"]["balanced_accuracy"] for item in outer_results
         ]
         mlp_scores = [
-            item["families"]["DNN"]["outer_scores"]["balanced_accuracy"]
-            for item in outer_results
+            item["families"]["DNN"]["outer_scores"]["balanced_accuracy"] for item in outer_results
         ]
         gap = float(np.mean(mlp_scores) - np.mean(gbdt_scores))
         meta_keys = outer_results[0]["meta_features"].keys()

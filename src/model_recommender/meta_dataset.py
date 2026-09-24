@@ -57,9 +57,7 @@ def build_meta_dataset(
     rows = []
     for path in result_files:
         result = json.loads(path.read_text())
-        rows.append(
-            benchmark_result_to_row(result, require_research_valid=require_research_valid)
-        )
+        rows.append(benchmark_result_to_row(result, require_research_valid=require_research_valid))
     if not rows:
         raise ValueError("No benchmark result files were provided.")
     frame = pd.DataFrame(rows).sort_values("dataset").reset_index(drop=True)

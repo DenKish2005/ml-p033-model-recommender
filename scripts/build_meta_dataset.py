@@ -22,8 +22,7 @@ def main() -> None:
         "--allow-smoke",
         action="store_true",
         help=(
-            "Development only: permit successful smoke JSONs; "
-            "do not use for research conclusions."
+            "Development only: permit successful smoke JSONs; do not use for research conclusions."
         ),
     )
     args = parser.parse_args()
