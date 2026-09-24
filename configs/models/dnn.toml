@@ -1,3 +1,17 @@
 [family]
 name = "DNN"
 models = ["mlp"]
+
+[mlp]
+max_iter = 500
+solver = "adam"
+activation = "relu"
+early_stopping = false
+hidden_layer_sizes = [[32, 16], [64, 32], [128, 64]]
+alpha = [0.0001, 0.001, 0.01]
+learning_rate_init = [0.0003, 0.001, 0.003]
+
+[mlp.baseline]
+hidden_layer_sizes = [32, 16]
+alpha = 0.0001
+learning_rate_init = 0.001

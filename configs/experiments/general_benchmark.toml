@@ -1,7 +1,19 @@
 [experiment]
 name = "general_dataset_benchmark"
-seeds = [42, 137, 2026]
+outer_seeds = [42, 137, 2026]
+test_size = 0.25
+inner_folds = 3
+candidate_count_per_model = 20
+tuning_seed = 42
 task_type = "binary_classification"
+primary_metric = "balanced_accuracy"
+secondary_metrics = ["roc_auc", "search_seconds", "refit_seconds"]
 protocol = "docs/experiment-protocol.md"
-compare_families = ["GBDT", "DNN"]
-status = "planned"
+implementation = "src/model_recommender/runner.py"
+status = "implemented; real full runs still need to be collected"
+
+[development_smoke]
+outer_seeds = [42]
+inner_folds = 2
+candidate_count_per_model = 2
+research_valid = false

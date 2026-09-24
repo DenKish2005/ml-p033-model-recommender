@@ -1,25 +1,26 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "MetaDatasetRow",
+  "title": "P033 Meta-Dataset Row",
   "type": "object",
   "required": [
-    "dataset_id",
-    "winner_family",
-    "performance_gap"
+    "dataset",
+    "family",
+    "clinical",
+    "mean_balanced_accuracy_gbdt",
+    "mean_balanced_accuracy_mlp",
+    "performance_gap_mlp_minus_gbdt"
   ],
   "properties": {
-    "dataset_id": {
-      "type": "string"
-    },
-    "winner_family": {
-      "enum": [
-        "GBDT",
-        "DNN"
-      ]
-    },
-    "performance_gap": {
-      "type": "number"
-    }
+    "dataset": {"type": "string"},
+    "openml_id": {"type": "integer"},
+    "version": {"type": "integer"},
+    "family": {"type": "string"},
+    "clinical": {"type": "boolean"},
+    "mean_balanced_accuracy_gbdt": {"type": "number"},
+    "mean_balanced_accuracy_mlp": {"type": "number"},
+    "performance_gap_mlp_minus_gbdt": {"type": "number"},
+    "actual_best_pipeline": {"enum": ["GBDT", "DNN"]},
+    "near_tie_within_margin": {"type": "boolean"}
   },
   "additionalProperties": true
 }

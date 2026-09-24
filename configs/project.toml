@@ -11,7 +11,7 @@ paper = "https://arxiv.org/abs/2407.02112"
 
 [research]
 objective = "Predict model choice from dataset meta-features and evaluate transfer to clinical tabular data."
-status = "Experiment scaffold; no trained recommender yet."
+status = "Benchmark and meta-learning pipeline implemented; full OpenML results not yet collected."
 meta_features = ["sample size", "feature count", "categorical fraction", "missingness", "class imbalance"]
 evaluation_unit = "dataset"
 recommender_evaluation = "Hold out entire datasets; compare against the best fixed model and an oracle."

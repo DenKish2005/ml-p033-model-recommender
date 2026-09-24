@@ -1,54 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "ModelRun",
+  "title": "P033 Dataset Benchmark Result",
   "type": "object",
-  "required": [
-    "dataset_id",
-    "model",
-    "family",
-    "metric",
-    "score",
-    "seed",
-    "status"
-  ],
+  "required": ["project", "dataset", "protocol", "research_valid", "status", "outer_splits"],
   "properties": {
-    "dataset_id": {
-      "type": "string"
+    "project": {"const": "CSCI447P033"},
+    "research_valid": {"type": "boolean"},
+    "status": {"enum": ["success", "excluded"]},
+    "dataset": {
+      "type": "object",
+      "required": ["name", "openml_id", "version", "family", "clinical"]
     },
-    "model": {
-      "type": "string"
+    "protocol": {
+      "type": "object",
+      "required": ["name", "outer_seeds", "inner_folds", "candidate_count"]
     },
-    "family": {
-      "enum": [
-        "GBDT",
-        "DNN",
-        "OTHER"
-      ]
-    },
-    "metric": {
-      "type": "string"
-    },
-    "score": {
-      "type": [
-        "number",
-        "null"
-      ]
-    },
-    "seed": {
-      "type": "integer"
-    },
-    "status": {
-      "enum": [
-        "success",
-        "failure",
-        "skipped"
-      ]
-    },
-    "runtime_seconds": {
-      "type": [
-        "number",
-        "null"
-      ]
-    }
-  }
+    "outer_splits": {"type": "array"},
+    "aggregate": {"type": ["object", "null"]}
+  },
+  "additionalProperties": true
 }

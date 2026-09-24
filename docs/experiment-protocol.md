@@ -2,7 +2,7 @@
 
 Can training-dataset meta-features select between tuned HistGradientBoostingClassifier and MLPClassifier with less performance loss than a fixed choice? The initial experiment covers binary classification under one preprocessing regime; conclusions apply to these two pipelines, not entire model families.
 
-This protocol is a research plan; the benchmark runner is not yet implemented.
+This protocol is implemented in `src/model_recommender/runner.py`. The `smoke` mode is a development-only reduction (one outer split, two candidates per model, two inner folds) and must not be used for research conclusions; only successful `full` runs are eligible for the meta-dataset.
 
 - **Scoring:** balanced accuracy as the primary metric; ROC-AUC, refit time, and search time as secondary measures. Record the positive class for every dataset.
 - **Splits:** three stratified 75/25 outer splits with seeds 42, 137, and 2026, with shuffled three-fold inner cross-validation for tuning using the corresponding outer seed. Both models use identical partitions. Patient or temporal structure requires appropriate outer and inner splits registered before fitting. Every training and scoring partition must contain both classes.
@@ -33,4 +33,4 @@ Evaluate the recommender on held-out dataset families, keeping duplicate version
 
 Compare with always choosing each model, the best fixed model selected on training datasets, and an oracle. Report per-dataset results and mean selection regret with equal dataset weights: best candidate balanced accuracy minus selected candidate balanced accuracy, without rounding near-ties to zero.
 
-Five nonclinical pilot datasets are registered in [configs/datasets.toml](../configs/datasets.toml) with pinned versions, family membership, clinical status, targets, feature types, and split constraints. The loader validates and caches them without fitting models. Next, audit duplicate records and implement the benchmark runner. Expand the dataset registry and register clinical holdouts before recommender evaluation. Version protocol changes before collecting results. A later preprocessing comparison is needed to connect recommendations to the reference paper's feature-engineering findings.
+Five nonclinical pilot datasets are registered in [configs/datasets.toml](../configs/datasets.toml) with pinned versions, family membership, clinical status, targets, feature types, and split constraints. The loader validates and caches them without fitting models. The repository now audits duplicate records and implements the benchmark runner. Next, collect smoke runs on the five pilots, then successful full runs, expand the registry to at least 20–30 nonclinical datasets, and register clinical holdouts before transfer evaluation. Version protocol changes before collecting results. A later preprocessing comparison is needed to connect recommendations to the reference paper's feature-engineering findings.

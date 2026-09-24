@@ -1,3 +1,17 @@
 [family]
 name = "GBDT"
 models = ["hist_gradient_boosting"]
+
+[hist_gradient_boosting]
+max_iter = 200
+early_stopping = false
+learning_rate = [0.03, 0.1]
+max_leaf_nodes = [15, 31, 63]
+l2_regularization = [0.0, 1.0, 10.0]
+min_samples_leaf = [10, 20, 40]
+
+[hist_gradient_boosting.baseline]
+learning_rate = 0.1
+max_leaf_nodes = 31
+l2_regularization = 0.0
+min_samples_leaf = 20

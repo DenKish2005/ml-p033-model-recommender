@@ -1,7 +1,15 @@
 [experiment]
 name = "meta_model_recommender"
 seed = 42
-evaluation = "held_out_dataset_families"
+evaluation = "leave_one_dataset_family_out"
+target = "performance_gap_mlp_minus_gbdt"
+recommend_dnn_if_predicted_gap_gt = 0.01
+status = "implemented; requires enough successful full benchmark datasets"
 
-[baselines]
-models = ["dummy", "logistic_regression", "decision_tree"]
+[models]
+names = ["dummy_mean", "ridge", "decision_tree", "random_forest"]
+primary_initial_model = "ridge"
+
+[metrics]
+primary = "mean_selection_regret"
+secondary = ["rmse_gap", "best_pipeline_accuracy"]

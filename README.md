@@ -2,78 +2,179 @@
 
 Course project by Daniyar Kshibekov and Yerassyl Auyeskhan.
 
-The goal is to recommend gradient-boosted decision trees (GBDTs) or deep networks from dataset properties such as sample size, missingness, and class imbalance, and evaluate the recommender on clinical tabular data.
+The project asks whether **dataset-level meta-features** can predict which of two tabular ML pipelines will perform better on an unseen dataset. The first implemented benchmark compares `HistGradientBoostingClassifier` (GBDT) with `MLPClassifier` (DNN-like baseline), then predicts the continuous performance gap from dataset characteristics. A later stage evaluates transfer to clinical tabular data.
 
-The project builds on [A Data-Centric Perspective on Evaluating Machine Learning Models for Tabular Data](https://arxiv.org/abs/2407.02112) and its [reference code](https://github.com/atschalz/dc_tabeval). [OpenML](https://www.openml.org/search?type=data) is the planned dataset source.
+The work builds on **A Data-Centric Perspective on Evaluating Machine Learning Models for Tabular Data** and its `atschalz/dc_tabeval` reference implementation. The upstream reproduction remains separate from this modern project environment.
 
-The reference study uses ten Kaggle competition datasets to examine the effects of preprocessing, feature engineering, and hyperparameter tuning on model rankings. Our extension asks whether dataset meta-features can predict a useful model choice on unseen datasets, including clinical data.
+## What is implemented now
+
+- pinned five-dataset OpenML registry with metadata/checksum validation;
+- raw-dataset meta-feature extraction;
+- duplicate/missingness/conflicting-signature audit;
+- leakage-safe numeric/categorical preprocessing;
+- median imputation + missing indicators;
+- categorical constant imputation + dense one-hot encoding;
+- MLP numeric scaling;
+- pre-allocation 512 MiB dense-matrix guard;
+- deterministic HistGradientBoosting and MLP candidate sets;
+- nested benchmark runner with paired outer/inner splits;
+- `smoke` and `full` benchmark modes;
+- machine-readable trial/failure/warning/result logging;
+- meta-dataset builder (one row = one dataset);
+- performance-gap regression recommenders;
+- held-out dataset-family evaluation and recommendation regret;
+- upstream reproduction evidence helper;
+- unit tests.
+
+No real full OpenML benchmark results are bundled in this archive. Those must be produced on the user's machine from the pinned public sources.
 
 ## Setup
 
-Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and run from the repository root:
+Install `uv`, then run from the repository root:
 
 ```bash
 uv python install 3.14.7
 make setup
-```
-
-This creates a local Python environment using the locked dependencies.
-
-## Usage
-
-Run the offline GBDT-versus-MLP demo on scikit-learn's breast cancer dataset:
-
-```bash
-make demo
-```
-
-Results are saved to `artifacts/demo.json`. This demo checks the experiment pipeline; it does not provide a validated model recommendation.
-
-Extract meta-features from a classification CSV, replacing the path and target column below:
-
-```bash
-uv run p033 characterize data/dataset.csv --target outcome
-```
-
-Use a training partition when preparing meta-features for an experiment. The target must have at least two classes and no missing values.
-
-List the pinned pilot datasets and download them into the local OpenML cache:
-
-```bash
-uv run p033 datasets
-make data
-```
-
-Fetch one dataset with `uv run p033 fetch credit-g`. Use `--registry` or `--cache-dir`
-to override the default paths. Run commands from the repository root. `make data` writes a
-validation summary to `artifacts/datasets.json`; downloads are cached under `data/openml`.
-
-The [registry](configs/datasets.toml) pins five nonclinical pilots: credit-g, ionosphere,
-spambase, adult, and tic-tac-toe. It records provenance, feature roles, families, and split
-assumptions. `fetch all` excludes clinical datasets, which are reserved for transfer evaluation.
-
-The loader validates dataset identity, checksum, schema, and classes, preserves missing values,
-and encodes the registered positive class as `1`. Splitting and preprocessing belong to the
-benchmark runner. Five pilots exercise the pipeline; recommender evaluation needs more datasets.
-
-Run the development checks:
-
-```bash
 make check
 make test
 ```
 
-## Status
+## Quick workflow
 
-The project includes meta-feature extraction, a GBDT/MLP demo, a pinned five-dataset registry,
-cached OpenML loading with validation, and tests. Benchmarking across datasets, recommender
-training, and evaluation on held-out datasets are still to be implemented.
+### 1. Download pilot data
 
-Local data and generated artifacts are ignored by Git.
+```bash
+make data
+```
 
-## Planned experiment
+### 2. Audit one dataset
 
-Compare tuned HistGradientBoosting and MLP pipelines on binary classification datasets, then learn to select between them from dataset meta-features. See the [experiment protocol](docs/experiment-protocol.md) for the planned evaluation; it is not yet implemented by the CLI or demo.
+```bash
+make audit DATASET=credit-g
+```
 
-Next: audit pilot duplicates and implement the benchmark runner using the registered split
-constraints and experiment protocol, then expand the registry beyond the pilot datasets.
+### 3. Run one fast end-to-end smoke benchmark
+
+```bash
+make smoke DATASET=credit-g
+```
+
+Output:
+
+`results/raw_model_runs/credit-g.smoke.json`
+
+Smoke mode is for engineering validation only and sets `research_valid: false`.
+
+### 4. Run the full research protocol for one dataset
+
+```bash
+make full DATASET=credit-g
+```
+
+Output:
+
+`results/raw_model_runs/credit-g.full.json`
+
+A successful full run has `research_valid: true` and can enter the meta-dataset.
+
+### 5. Run all registered nonclinical datasets
+
+Development first:
+
+```bash
+uv run python scripts/collect_openml_results.py --mode smoke
+```
+
+Then, after smoke failures are resolved:
+
+```bash
+uv run python scripts/collect_openml_results.py --mode full
+```
+
+### 6. Build the meta-dataset
+
+```bash
+make meta
+```
+
+This consumes successful full benchmark JSON files and creates:
+
+`results/meta_dataset.csv`
+
+### 7. Evaluate the recommender
+
+```bash
+make evaluate
+```
+
+The initial meta-target is:
+
+`MLP mean balanced accuracy - GBDT mean balanced accuracy`.
+
+DNN is recommended only when predicted advantage is greater than `0.01`; otherwise GBDT is selected. This margin is an operational near-tie rule, not a statistical-equivalence claim.
+
+## CLI
+
+```bash
+uv run p033 datasets
+uv run p033 fetch credit-g
+uv run p033 audit credit-g
+uv run p033 benchmark credit-g --mode smoke
+uv run p033 benchmark credit-g --mode full
+uv run p033 characterize path/to/data.csv --target outcome
+```
+
+## Pilot registry
+
+The current engineering pilots are:
+
+- `credit-g`
+- `ionosphere`
+- `spambase`
+- `adult`
+- `tic-tac-toe`
+
+Five datasets are **not enough** for final meta-learning claims. After validating the runner, expand toward at least 20–30 nonclinical datasets; 30–60 is the stronger target if compute allows.
+
+## Experiment design
+
+The authoritative protocol is in [`docs/experiment-protocol.md`](docs/experiment-protocol.md).
+
+Full mode uses:
+
+- outer seeds `42`, `137`, `2026`;
+- stratified 75/25 outer splits;
+- shuffled 3-fold inner CV;
+- 20 deterministic candidate configurations/model;
+- balanced accuracy as the primary metric;
+- ROC-AUC and timing as secondary diagnostics;
+- all-or-nothing eligibility: every candidate/fold and final refit must succeed;
+- one aggregated meta-learning row per dataset.
+
+The recommender is evaluated with complete dataset-family holdouts rather than random row splitting of the meta-table.
+
+## Upstream reproduction
+
+Keep `atschalz/dc_tabeval` in a separate Linux/WSL + Python 3.11.7 environment. Do **not** install its old pinned stack into this project's environment.
+
+Record a real run/failure with:
+
+```bash
+uv run python scripts/run_reproduction.py \
+  --repo /path/to/dc_tabeval \
+  --python /path/to/python3.11
+```
+
+## Documentation
+
+- [`NEXT_STEPS.md`](NEXT_STEPS.md) — exact order of work from here;
+- [`docs/experiment-protocol.md`](docs/experiment-protocol.md) — scientific protocol;
+- [`docs/decisions.md`](docs/decisions.md) — design decisions and rationale;
+- [`docs/reproducibility.md`](docs/reproducibility.md) — environment/evidence rules;
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — repository flow.
+
+## Important interpretation limit
+
+The implemented first-stage result is a recommendation between **HistGradientBoosting and MLP pipelines**. It is not yet evidence that one entire model family (“all GBDTs” or “all DNNs”) is preferable. Family-level claims require adding and validating multiple models per family later.
+
+Local OpenML caches and generated artifacts are intentionally not committed.
