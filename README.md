@@ -37,6 +37,10 @@ No real full OpenML benchmark results are bundled in this archive. Those must be
 
 Install `uv`, then run from the repository root:
 
+Windows PowerShell/CMD and bash instructions without `make`, preserving an existing
+`.venv`, are in [portable locked setup](docs/reproducibility.md#portable-locked-setup-p033-002).
+CI uses uv 0.12.18 and Python 3.14.7; installation needs network, default tests are offline.
+
 ```bash
 uv python install 3.14.7
 make setup

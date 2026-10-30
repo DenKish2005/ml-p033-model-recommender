@@ -2,7 +2,7 @@
 
 [Главный план](MASTER_PLAN.md) · [Аудит](PROJECT_AUDIT.md) · [Требования](REQUIREMENTS.md) · [Методология](EXPERIMENT_PLAN.md) · [Тесты](TEST_AND_ACCEPTANCE_PLAN.md) · [Deliverables](FINAL_DELIVERABLES.md)
 
-Baseline2026-10-30, обновление P033-001: **только P033-001 DONE**; остальные задачи сохраняют будущий статус, P033-002 READY, P033-023 DECISION. P0=validity/blocker, P1=Tier B, P2=sensitivity, P3=optional. Роли — предложения распределения, не назначенные людям обязательства: E=engineering lead, R=research lead, V=второй студент/reviewer; Daniyar и Yerassyl выбирают роли самостоятельно. Status TODO означает нет подтверждения completion; DECISION означает нужен отдельный freeze/выбор; READY — можно начать; EXTERNAL — нужен внешний ресурс, независимые ветки продолжаются; DONE — acceptance конкретной карточки выполнен с evidence, не всех связанных requirements.
+Baseline2026-10-30, обновление P033-002: **P033-001 и P033-002 DONE** в acceptance scope своих карточек; остальные задачи сохраняют будущий статус, P033-003 READY, P033-023 DECISION. P0=validity/blocker, P1=Tier B, P2=sensitivity, P3=optional. Роли — предложения распределения, не назначенные людям обязательства: E=engineering lead, R=research lead, V=второй студент/reviewer; Daniyar и Yerassyl выбирают роли самостоятельно. Status TODO означает нет подтверждения completion; DECISION означает нужен отдельный freeze/выбор; READY — можно начать; EXTERNAL — нужен внешний ресурс, независимые ветки продолжаются; DONE — acceptance конкретной карточки выполнен с evidence, не всех связанных requirements.
 
 Общий DoD **каждой** задачи: выполнены перечисленные steps, output существует и проверен указанным методом, acceptance выполнен, traceability IDs и research log обновлены, нет необъяснённого изменения frozen protocol. Активное время указано отдельно от ожидания compute/access. Batch tasks — контейнеры повторяемых subtasks по1–4 h; не одна неограниченная задача. Все proposed functions/flags ниже ещё не существуют, если прямо не сказано «существует».
 
@@ -13,7 +13,7 @@ Baseline2026-10-30, обновление P033-001: **только P033-001 DONE*
 | ID | Конкретное действие и files | Точная команда после/для работы | Проверяемый результат |
 |---|---|---|---|
 | P033-001 / DONE | Scope baseline, Tier B working target, D011–D020 dispositions и official unknowns записаны | `git show ea1de5a --stat`; `git show b6b88e0 --stat` | [Decision ledger](decisions.md), [unknowns](RISKS_AND_OPEN_QUESTIONS.md), acceptance checklist ниже; full evaluation freeze остаётся P033-023 |
-| P033-002 | Добавить Windows CI, format/lock check; описать workspace temp/cache и clean-clone commands в .github/workflows/ci.yml, docs/reproducibility.md | `uv lock --check --offline`; `uv run --locked ruff check .`; `uv run --locked ruff format --check .`; `uv run --locked pytest -q --basetemp=artifacts/pytest_tmp` | Offline suite green; CI workflow matrix review/actual CI URLs после обычного authorized commit workflow; baseline35 tests уже проверены |
+| P033-002 / DONE | Windows/Ubuntu matrix, format/lock/timeouts/concurrency, socket-blocked suite, shell instructions и actual clean install | `uv lock --check --offline`; `uv run --locked --offline ruff check .`; `uv run --locked --offline ruff format --check .`; `uv run --locked --offline pytest -q --basetemp=artifacts/pytest_tmp` (parent `artifacts` должен существовать) | 38 tests, actual locked install, обе OS green в двух clean attempts; [evidence/commands](reproducibility.md#portable-locked-setup-p033-002) |
 | P033-003 | Source/license/admission cards пяти pilots, docs/data_dictionary.md; проверить IDs/versions/terms, не менять данные ради winners | `uv run --locked p033 datasets --output artifacts/pilot_registry.json`; `git diff -- docs/data_dictionary.md configs/datasets.toml` | 5 source cards: source/version/license evidence/family/target/time/roles/unknowns |
 | P033-004 | Написать tests/test_preprocessing.py на existing checked wrappers, guard/leakage/all-missing | `uv run --locked pytest -q tests/test_preprocessing.py --basetemp=artifacts/pytest_tmp` | New file создаётся этой задачей; finite dimensions, pre-allocation rejection и train-only fit доказаны fixtures |
 | P033-005 | tests/test_model_families.py + tests/test_runner.py:20 candidates, seed/tie/TOML parity/full signature | `uv run --locked pytest -q tests/test_model_families.py tests/test_runner.py --basetemp=artifacts/pytest_tmp` | Deterministic20+20, paired indices, intended defaults; tests fail on deliberate config drift |
@@ -48,12 +48,23 @@ Baseline2026-10-30, обновление P033-001: **только P033-001 DONE*
 
 ### P033-002 — Environment и CI portability
 
-- **PH3 / P1 / READY / E; 2–4 h**, compute offline tests≤5 min proposed/job.
+- **PH3 / P1 / DONE, 2026-10-30 / E; 2–4 h план**, active time не измерялось; pytest summaries в успешных CI attempts на `567320d`: 1.57–5.60 s; limit 5 min/test step, job 15 min.
 - **Deps / input:** P033-001 для accepted compatibility; existing Python3.14.7/lock/35 tests.
 - **Steps:** 1) сохранить baseline versions; 2) добавить Windows/Ubuntu matrix, format+lock validation и timeout; 3) убрать network dependence default suite; 4) описать Temp/cache workaround; 5) проверить clean install в новой разрешённой папке без удаления текущей .venv.
 - **Files:** CI, pyproject.toml только если нужна test config, docs/reproducibility.md; functions не нужны.
 - **Output / tests / AC:** T08; supported OS green, locked sync и no guessed package upgrades; CI URLs или честный pending status.
 - **Risk / DoD:** unavailable interpreter/network→record blocker; не менять Python только для удобства; common DoD.
+
+**Acceptance evidence (environment/CI scope T08, common DoD):**
+
+- [x] Новая проверка baseline: Python 3.14.7 / uv 0.12.18 и locked package versions сохранены, 35 tests до изменений прошли; прежний аудит не выдан за новые checks. Python/pyproject/lock, configs, ML implementation и frozen0.1 не менялись.
+- [x] Windows/Ubuntu matrix, explicit offline lock/Ruff/format, locked sync, timeouts/concurrency и два suite runs/job добавлены; [attempt 1](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41019812975/attempts/1) и [attempt 2](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41019812975/attempts/2) на `567320d` success на обеих OS. Каждый job — fresh checkout/env/install без restored cache. Начальный [failed run](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41019463627) расследован и исправлен отдельным commit.
+- [x] Default suite socket-disabled: 38 passed дважды в старой и новой env; existing OpenML tests mocked, synthetic runner only. Network scenarios требуют marker + `--run-network`; opt-in probe проверен без connections/downloads. Новые tests проверяют accidental socket/connection/DNS access, не увеличивают ML coverage искусственно.
+- [x] Фактическая clean install в новой `artifacts/p033002/clean-env-2`: 19 packages installed, compatibility check и повтор suite green; `.venv` сохранена. Первая DNS-blocked попытка честно записана отдельно от успешной установки; dry-run не использовался как evidence.
+- [x] [Воспроизводимые команды и evidence](reproducibility.md#portable-locked-setup-p033-002): PowerShell/CMD/bash без make, workspace Temp/cache, basetemp parent, initial network/cache limits. CMD и Git Bash команды выполнены в дополнительных новых env; native Ubuntu проверена hosted CI, не выдана за локальную Linux-проверку.
+- [x] Diff/staged review, whitespace, Markdown links/anchors/identifiers и сохранность scientific baseline проверены; [research log](research_log.md#2026-10-30--p033-002-environment-and-ci-portability) и master согласованы. Commits/push идут непосредственно в main; independent human acceptance не заявляется.
+
+В P033-002 нет pending platform/clean-install checks. Real OpenML, benchmarks/upstream, дальнейшие T08 CLI/E2E cases, полный T14 и G1 остаются вне выполненного scope. P033-003 READY, но не выполнялась; P033-023 остаётся DECISION.
 
 ### P033-003 — Пять pilot source cards
 
@@ -419,4 +430,4 @@ Critical path по зависимостям:001→004/005/006/007/008→009/010�
 
 Активная работа Tier B ориентировочно **160–260 h** с учётом reuse, review и доработок; optional nested HPO/повторные source reviews могут увеличить оценку. Для budget резервировать **190–310 h** при environment/access failures. Не складывать repeated pilot fits, labels reuse и new runs дважды. Tier A сокращает расширение/features/ablations, но не P0 validity, baselines и clinical fence. Tier C добавляет60–140h и model compute; сильная полноценная reproduction может добавить больше и оценивается отдельно.
 
-Milestones: M0 scope+gates (P033-001 DONE, source cards/P033-023 ещё открыты; весь M0 не DONE); M1 real smoke5; M2 first valid full+cost; M3 independent dataset corpus+complete benchmarks; M4 primary OOF baseline comparison; M5 zero-shot clinical+uncertainty; M6 reproducible report/slides/demo. При gate failure исправить конкретный defect, обновить assumptions/estimates и продолжить; не объявлять DONE по названию файла. Следующая P033-002 READY; её implementation/CI runs в P033-001 не выполнялись.
+Milestones: M0 scope+gates (P033-001 DONE, source cards/P033-023 ещё открыты; весь M0 не DONE); M1 real smoke5; M2 first valid full+cost; M3 independent dataset corpus+complete benchmarks; M4 primary OOF baseline comparison; M5 zero-shot clinical+uncertainty; M6 reproducible report/slides/demo. При gate failure исправить конкретный defect, обновить assumptions/estimates и продолжить; не объявлять DONE по названию файла. P033-002 DONE в environment/CI scope; следующая P033-003 READY, её source admission этим этапом не выполнялся.

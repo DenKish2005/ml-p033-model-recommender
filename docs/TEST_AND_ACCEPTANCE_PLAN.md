@@ -4,6 +4,8 @@
 
 На2026-10-30 подтверждены **35 passed**, Ruff/format/lock checks. Это baseline, не покрытие всех нижеследующих требований. Новые tests/files ниже **запланированы**, команду для ещё не созданного test file выполнять после соответствующей задачи. Любой network test opt-in; default suite offline. Результат tests ≠ доказательство отсутствия всех leakage mechanisms: нужно дополнительно исследовать source semantics, cohorts и prediction time.
 
+**Обновление P033-002, 2026-10-30:** environment/CI часть T08 выполнена: actual clean locked installs, 38 socket-blocked offline tests (35 baseline +3 network guard regressions), Windows/Ubuntu matrix с lock/lint/format/timeouts/concurrency и двумя последовательными clean attempts. [Commands, CI URLs, failures/fixes и ограничения](reproducibility.md#portable-locked-setup-p033-002). Network marker + `--run-network` реализованы; live tests пока отсутствуют. Будущие T08 CLI/E2E cases и полный T14 не объявляются выполненными. NFR-019 проверена повтором полного успешного CI run в новых jobs, дополнительно к двум pytest processes в каждом job.
+
 ## 1. Общая команда и evidence policy
 
 PowerShell в корне проекта:
