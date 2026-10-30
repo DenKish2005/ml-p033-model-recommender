@@ -40,9 +40,9 @@
 
 | Q | Тип / что неизвестно | Почему существенно | Как закрыть / task / interim assumption |
 |---|---|---|---|
-| Q01 | UNKNOWN/OFFICIAL: university spec/rubric, milestones/deadline, required format/report length/presentation duration | Нельзя certify institutional submission без критериев | Получить реальный документ от преподавателя/студентов, attach source path/date; P001/037. Пока research package Tier B PROPOSED, даты не выдуманы |
+| Q01 | UNKNOWN/OFFICIAL: university spec/rubric, milestones/deadline, required format/report length/presentation duration | Нельзя certify institutional submission без критериев | Студенты могут предоставить реальный документ с source path/date; P033-037 сверит требования. P033-001 зафиксировала unknown и Tier B как рабочую цель, без выдуманных дат; независимая работа продолжается |
 | Q02 | UNKNOWN: CPU cores/RAM/GPU/доступный wall/energy/storage budget | Determines corpus/parallelism/optional models | P012 host inventory+one full timing; no need менять код ради assumed GPU; initial concurrency1 |
-| Q03 | NEEDS RESEARCH DECISION: Tier A/B/C и доступные active hours | Нет оснований обещать full publication scope | P001 принять Tier B target20–30 либо честно Tier A≈15; source counts не OFFICIAL |
+| Q03 | RESEARCH RECOMMENDATION / частично закрыт: Tier B выбран; доступные active hours UNKNOWN | Принятие цели не подтверждает feasibility и не обещает publication scope | P033-001, 2026-10-30: рабочая цель Tier B, 20–30 general / 3–5 clinical и 160–260 h (190–310 с резервом) — planning assumptions; P033-012/014/015/029 проверят ресурсы/источники. Сокращение scope до outcomes записать отдельно; counts не OFFICIAL |
 | Q04 | NEEDS RESEARCH DECISION: duplicates/conflicting signatures/symmetries policy | Random split may share equivalent observations | Source review P003/008; preserve0.1 or version corrected grouped sensitivity; no silent row deletion |
 | Q05 | NEEDS RESEARCH DECISION: meta-model tuning vs fixed primary | Selection bias при small meta n | D013/D014/P023; рекомендован fixed Ridgeα1 primary, all others secondary |
 | Q06 | UNKNOWN: exact general dataset count after license/dedup/memory admission | Shortlist содержит unverified candidates | P014/015 produce actual admitted count/family coverage; не обещать20 rows до checks |
@@ -50,10 +50,12 @@
 | Q08 | UNKNOWN: clinical endpoint timing/group keys/feasible folds | Clinical source may require different protocol | P029/030; small public diagnosis cohorts first, large repeated-visit source only if keys usable |
 | Q09 | UNKNOWN: upstream legal data access, GPU support, permitted no-submit local metric path | Default helper unsafe and local metric flow may assume submission | P013 source inspection; allow documented partial failure; no requirement to send predictions |
 | Q10 | NEEDS RESEARCH DECISION: summary/model artifact publication | results/ currently tracked by default, model storage ignored | P032 allowlist aggregate summaries, provide checksum/acquisition for restricted artifacts; raw clinical never required |
-| Q11 | UNKNOWN: official title vs configs/project.toml title | Переданный title — статья, config — extension | P001 keep official title with extension subtitle in report, update config only after explicit recorded naming choice |
+| Q11 | UNKNOWN / needs confirmation: final naming, official title vs config title и working extension name | Brief/master: A Data-Centric Perspective on Evaluating Machine Learning Models for Tabular Data; config project.title: Dataset-aware model recommendation for clinical tabular data; working name: Dataset-Aware ML Model Recommender | P033-001 сопоставила роли в [scope baseline](decisions.md#p033-001--scope-baseline-2026-10-30), но не утвердила переименование/subtitle. ID CSCI447P033 совпадает. Студенты подтверждают naming/реальный источник при наличии; P033-034/037 сверят титул. Config сохраняется до записанного решения |
 | Q12 | OPTIONAL: strongest family-level conclusion/preprocessing study | Current two-pipeline design insufficient | Tier C/P038 separate protocol/compute; not blocking base RQ on concrete pipelines |
 
 Вопросы не требуют останавливать подготовку плана. Никаких писем преподавателю или внешним людям этим заданием не разрешено; этот документ — готовый список для самостоятельного уточнения студентами.
+
+P033-001 различает внешние неизвестные (Q01, Q02, Q06, Q08, Q09, Q11), будущие research decisions и выбранный working scope (Q03). Источник OFFICIAL-сведений — brief, сохранённый в [master plan](MASTER_PLAN.md), без независимой university verification. Наличие открытого вопроса не означает, что P033-001 должна получить недоступные внешние сведения или выполнить downstream tasks.
 
 ## 3. Отрицательный результат: заранее допустимый сценарий
 
