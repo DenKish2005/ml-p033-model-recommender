@@ -23,14 +23,13 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      UV_CACHE_DIR: ${{ github.workspace }}/artifacts/ci/uv-cache
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
         with:
           version: "0.12.18"
           enable-cache: false
+          cache-local-path: ${{ github.workspace }}/artifacts/ci/uv-cache
       - name: Install pinned Python
         run: uv python install
         timeout-minutes: 5
@@ -47,6 +46,8 @@ jobs:
         run: uv run --locked --offline ruff check .
       - name: Check formatting
         run: uv run --locked --offline ruff format --check .
+      - name: Prepare pytest workspace parent
+        run: uv run --locked --offline python -c "from pathlib import Path; Path('artifacts/ci').mkdir(parents=True, exist_ok=True)"
       - name: Offline tests
         run: uv run --locked --offline pytest -q --basetemp=artifacts/ci/pytest-first
         timeout-minutes: 5
