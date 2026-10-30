@@ -2,7 +2,7 @@
 
 [Главный план](MASTER_PLAN.md) · [Аудит](PROJECT_AUDIT.md) · [Требования](REQUIREMENTS.md) · [Backlog](TASK_BACKLOG.md) · [Приёмка](TEST_AND_ACCEPTANCE_PLAN.md)
 
-Это **план**, датированный 2026-10-30, без новых experimental results. Действующий protocol0.1 остаётся в [experiment-protocol.md](experiment-protocol.md). Ниже предложения помечены **PROPOSED**: их нужно принять в `docs/decisions.md` до затрагиваемых production runs; этот документ сам по себе не меняет Python/TOML.
+Это **план**, датированный 2026-10-30, без новых experimental results. Действующий protocol0.1 остаётся в [experiment-protocol.md](experiment-protocol.md). После P033-001 текущий статус D011–D020 записан в [decision ledger](decisions.md#d011d020--dispositions-p033-001-2026-10-30); accepted design не означает implemented/verified. Остальные proposals остаются PROPOSED до соответствующих checks/freeze; этот документ сам по себе не меняет Python/TOML. Tier B — рабочая цель, counts/effort/compute — плановые предположения до проверки ресурсов и источников.
 
 ## 1. Научная цель и связь с reference paper
 
@@ -39,20 +39,22 @@ Equal trial count — бюджет **конфигураций**, не GPU-second
 
 ## 3. Предлагаемые решения, которые нужно freeze
 
-| ID | PROPOSED решение | Влияние / момент принятия |
+| ID / статус P033-001 | Решение / открытая часть | Влияние / момент проверки |
 |---|---|---|
-| D011 | Строгий canonical protocol fingerprint + schema admission + provenance | Не меняет scores, но старые runs без evidence требуют verification/re-run; PH3 до full |
-| D012 | General/clinical fence, versioned meta-feature allowlist | Устраняет leakage; не добавляет clinical train; PH3 |
-| D013 | На general meta-level primary заранее fixed Ridgeα1; Dummy/tree/RF secondary; никаких post-hoc main-model substitutions | Минимум winner-selection bias; PH0/9 до final evaluation. Nested selection optional Tier B sensitivity |
-| D014 | Family LOGO primary; если нужен model selection — inner grouped CV и external lockbox families | LODO совпадает с LOGO только если family=dataset; число lockbox families выбрать по доступным n, не обещать заранее power |
-| D015 | Inference extraction: усреднять descriptors по тем же трём75% stratified development subsets, без outer test outcome/performance | Согласует существующие meta rows. Нужен labelled development sample; full-data extraction — отдельная sensitivity, не silent replacement |
-| D016 | Feature schema v2 и meta missing imputation+indicator, train-only | Feature expansion меняет recommender input; labels/performance reusable только при неизменных base splits/protocol и наличии source/split identity |
-| D017 | Grouped/temporal clinical split version отдельный от stratified general | Сохраняет medically required leakage protection, меняет estimand; report general/clinical protocols рядом, не объединять без объяснения |
-| D018 | Group-cluster bootstrap B=2000, seed42; threshold sensitivity0/.005/.01/.02 | B proposed, остановиться после stability check endpoints. Exploratory sensitivity не выбор нового primary threshold |
-| D019 | Source/cohort/duplicate policy: variants same family; при identifiable repeated entity groups always together | Если применить grouped correction к general pilot — новый protocol suffix и обе версии report; не rewrite frozen0.1 |
-| D020 | No-submit upstream reproduction, сначала default/minimalistic; scope1 dataset/1 model | Предотвращает автоматическую отправку Kaggle; не полное повторение статьи |
+| D011 / accepted design | Строгий canonical fingerprint + schema admission + provenance | Scores0.1 неизменны; старые artifacts требуют evidence/re-run; P033-005/006/011/019/020 |
+| D012 / accepted design | General/clinical fence, versioned predictor allowlist | Clinical не участвуют в general fitting/selection; enforcement впереди, P033-007/016/021/023/031 |
+| D013 / accepted design | Fixed scaled Ridgeα1 primary; Dummy/tree/RF secondary, без post-hoc substitutions | Не доказательство лучшей модели; manifest/implementation P033-021/022/023/024 |
+| D014 / accepted design | Family LOGO primary, equal-dataset mean paired regret difference vs training-selected best fixed | Nested tuning optional secondary и lockbox allocation deferred; families/folds/eligibility freeze P033-014/015/023/024/026 |
+| D015 / proposed | Matching inference mean descriptors трёх75% stratified development subsets | Labelled input, feasibility/clinical sampler ещё проверить; P033-016/023/025/030 |
+| D016 / proposed | v2 и train-only meta imputation+indicators; exact compact schema не frozen | Base labels reusable только при same source/split/protocol; cost/NA/compatibility P033-016/021/023/025/027 |
+| D017 / needs confirmation | Отдельная clinical split version; точные endpoints/groups/folds неизвестны | General0.1 неизменен; unsupported strategy rejected; P033-008/023/029/030/031 |
+| D018 / proposed | Family bootstrap B=2000/seed42, sensitivity0/.005/.01/.02 | Stability/few-family policy заранее, без остановки по favourable significance; P033-023/026/028 |
+| D019 / accepted design | Variants/shared cohorts same family; identifiable entity groups together; no silent dedup | Source-specific review и separate protocol при base-split correction; P033-003/008/009/014/015/019/020/029 |
+| D020 / accepted design | No-submit, bounded1 dataset/1 model initial reproduction target | Numerical attempt deferred до source/env/budget feasibility; P033-002/013/032/034; не full paper reproduction |
 
 Если решение не принято, downstream task не должен подменять его default удобной библиотеки. Для конфликтующих решений версионировать конфиг и новый run namespace; не смешивать incompatible protocols в primary meta table.
+
+Rationale, sources/assumptions, compatibility и verification timing для каждого ID — в decision ledger. P033-001 задаёт baseline, **P033-023 остаётся DECISION**: нужны prospective family/source/feature policy и timestamp/hash evaluation manifest до P033-018/final results; эта таблица их не заменяет.
 
 ## 4. Dataset admission и расширение
 
@@ -136,7 +138,7 @@ Primary0.1 — только публичные законно доступные
 | Correlation/redundancy | abs Pearson r for eligible numeric pairs with≥3 pairwise observed,var>0; mean, max, fraction выше .95 | n_rows cap5000, eligible columns cap200, seed42 proposed for deterministic O(n p²) bound; exact selected indices/hash saved. <2 cols→NA |
 | Sparsity/density | numeric zero_fraction=#observed numeric zeros/#observed numeric cells; density=1−zero_fraction | N empty/all missing→NA; missing≠zero; не OHE density и не категориальная sparsity |
 
-Helpers: `summarize_numeric`, `summarize_categorical`, `summarize_correlations`, `feature_schema` **PROPOSED**, вход raw X/roles/seed/caps, выход only named float fields + extraction metadata (metadata не predictors). Correlation subsampling не зависит от y/scores. Reuse actual split IDs; не извлекать meta-features из standardized/OHE table вместо raw. Runtime/memory benchmark на pilots до freeze. Добавлять десятки коррелированных predictors при≈20 rows опасно: primary compact schema (v1+log size+types+missing/cardinality), v2 full — ablation. Landmarking (small tree/logistic CV score) optional: только development training data, inner-CV, independent timing, risk cost/leakage; не baseline Tier A/B.
+Helpers: `summarize_numeric`, `summarize_categorical`, `summarize_correlations`, `feature_schema` **PROPOSED**, вход raw X/roles/seed/caps, выход only named float fields + extraction metadata (metadata не predictors). Correlation subsampling не зависит от y/scores. Reuse actual split IDs; не извлекать meta-features из standardized/OHE table вместо raw. Runtime/memory benchmark на pilots до freeze. Добавлять десятки коррелированных predictors при≈20 rows опасно: compact schema (v1+log size+types+missing/cardinality) — кандидат primary по D016, v2 full — кандидат ablation; exact list/fallback freeze в P033-016/023, не уже принятое расширение. Landmarking (small tree/logistic CV score) optional: только development training data, inner-CV, independent timing, risk cost/leakage; не baseline Tier A/B.
 
 ## 6. Meta-dataset contract
 

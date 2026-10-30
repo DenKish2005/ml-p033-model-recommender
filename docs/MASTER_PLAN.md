@@ -14,7 +14,7 @@
 6. [FINAL_DELIVERABLES.md](FINAL_DELIVERABLES.md):exact paths outputs,21 report sections,12 slides и demo.
 7. [RISKS_AND_OPEN_QUESTIONS.md](RISKS_AND_OPEN_QUESTIONS.md):27 risks,12 questions, fallback и negative-result policy.
 
-Canonical scientific protocol остаётся [experiment-protocol.md](experiment-protocol.md), его alias [experiment_protocol.md](experiment_protocol.md) сохранён. Историю D001–D010 в [decisions.md](decisions.md) не заменять новым планом. Новые D011–D020 из EXPERIMENT_PLAN — PROPOSED, требуют записи принятого выбора до соответствующих experiments.
+Canonical scientific protocol остаётся [experiment-protocol.md](experiment-protocol.md), его alias [experiment_protocol.md](experiment_protocol.md) сохранён. История D001–D010 сохранена. Текущие dispositions D011–D020 — в [decisions.md](decisions.md#d011d020--dispositions-p033-001-2026-10-30): accepted design D011–D014/D019/D020; proposed D015/D016/D018; needs confirmation D017. Accepted design не означает implemented/verified; nested selection, lockbox allocation и numerical upstream attempt отложены до указанных там checks. EXPERIMENT_PLAN синхронизирован с этим ledger, frozen0.1 не изменён.
 
 ## 2. Current status и границы требований
 
