@@ -1,5 +1,11 @@
 # CSCI447P033 — What to do next
 
+Актуальный подробный порядок с приоритетами, зависимостями и критериями приёмки:
+[`docs/MASTER_PLAN.md`](docs/MASTER_PLAN.md) и первые десять задач в
+[`docs/TASK_BACKLOG.md`](docs/TASK_BACKLOG.md). Разделы ниже сохранены как исходный
+workflow; перед full runs нужно закрыть P0 findings из
+[`docs/PROJECT_AUDIT.md`](docs/PROJECT_AUDIT.md), включая mixed smoke/full admission.
+
 The repository now contains the engineering pipeline needed for the next phase. Do the steps below in order; do not jump to clinical transfer yet.
 
 ## 0. Install and verify

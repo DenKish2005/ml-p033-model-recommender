@@ -2,6 +2,11 @@
 
 Course project by Daniyar Kshibekov and Yerassyl Auyeskhan.
 
+Полный план завершения исследования и доказательный аудит (2026-10-30):
+[`docs/MASTER_PLAN.md`](docs/MASTER_PLAN.md). Это план будущей работы; текущие
+ограничения и результаты проверок приведены в
+[`docs/PROJECT_AUDIT.md`](docs/PROJECT_AUDIT.md).
+
 The project asks whether **dataset-level meta-features** can predict which of two tabular ML pipelines will perform better on an unseen dataset. The first implemented benchmark compares `HistGradientBoostingClassifier` (GBDT) with `MLPClassifier` (DNN-like baseline), then predicts the continuous performance gap from dataset characteristics. A later stage evaluates transfer to clinical tabular data.
 
 The work builds on **A Data-Centric Perspective on Evaluating Machine Learning Models for Tabular Data** and its `atschalz/dc_tabeval` reference implementation. The upstream reproduction remains separate from this modern project environment.
