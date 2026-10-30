@@ -4,10 +4,11 @@ DATASET ?= credit-g
 setup:
 	uv sync --locked
 check:
-	uv run ruff check .
-	uv run ruff format --check .
+	uv lock --check --offline
+	uv run --locked --offline ruff check .
+	uv run --locked --offline ruff format --check .
 test:
-	uv run pytest
+	uv run --locked --offline pytest
 demo:
 	uv run p033 demo --output artifacts/demo.json
 data:

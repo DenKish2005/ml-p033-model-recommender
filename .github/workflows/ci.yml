@@ -4,13 +4,52 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: Offline checks (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    env:
+      UV_CACHE_DIR: ${{ github.workspace }}/artifacts/ci/uv-cache
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      - run: uv python install 3.14.7
-      - run: uv sync --locked
-      - run: uv run ruff check .
-      - run: uv run pytest
+        with:
+          version: "0.12.18"
+          enable-cache: false
+      - name: Install pinned Python
+        run: uv python install
+        timeout-minutes: 5
+      - name: Check lock consistency without network
+        run: uv lock --check --offline
+      - name: Install locked dependencies
+        run: uv sync --locked
+        timeout-minutes: 5
+      - name: Record environment
+        run: |
+          uv --version
+          uv run --locked --offline python -c "import sys, platform, importlib.metadata as m; print(sys.version); print(platform.platform()); print({p:m.version(p) for p in ['numpy', 'pandas', 'scikit-learn', 'pytest', 'ruff']})"
+      - name: Lint
+        run: uv run --locked --offline ruff check .
+      - name: Check formatting
+        run: uv run --locked --offline ruff format --check .
+      - name: Offline tests
+        run: uv run --locked --offline pytest -q --basetemp=artifacts/ci/pytest-first
+        timeout-minutes: 5
+      - name: Repeat offline tests (NFR-019)
+        run: uv run --locked --offline pytest -q --basetemp=artifacts/ci/pytest-repeat
+        timeout-minutes: 5
