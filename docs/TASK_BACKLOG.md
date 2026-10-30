@@ -2,7 +2,7 @@
 
 [Главный план](MASTER_PLAN.md) · [Аудит](PROJECT_AUDIT.md) · [Требования](REQUIREMENTS.md) · [Методология](EXPERIMENT_PLAN.md) · [Тесты](TEST_AND_ACCEPTANCE_PLAN.md) · [Deliverables](FINAL_DELIVERABLES.md)
 
-Baseline2026-10-30: ниже **будущие задачи**, они не выполнены этим планированием. P0=validity/blocker, P1=Tier B, P2=sensitivity, P3=optional. Роли — предложения распределения, не назначенные людям обязательства: E=engineering lead, R=research lead, V=второй студент/reviewer; Daniyar и Yerassyl выбирают роли самостоятельно. Status TODO означает нет подтверждения completion; DECISION означает нужно записать выбор; READY — можно начать; EXTERNAL — нужен внешний ресурс, независимые ветки продолжаются.
+Baseline2026-10-30, обновление P033-001: **только P033-001 DONE**; остальные задачи сохраняют будущий статус, P033-002 READY, P033-023 DECISION. P0=validity/blocker, P1=Tier B, P2=sensitivity, P3=optional. Роли — предложения распределения, не назначенные людям обязательства: E=engineering lead, R=research lead, V=второй студент/reviewer; Daniyar и Yerassyl выбирают роли самостоятельно. Status TODO означает нет подтверждения completion; DECISION означает нужен отдельный freeze/выбор; READY — можно начать; EXTERNAL — нужен внешний ресурс, независимые ветки продолжаются; DONE — acceptance конкретной карточки выполнен с evidence, не всех связанных requirements.
 
 Общий DoD **каждой** задачи: выполнены перечисленные steps, output существует и проверен указанным методом, acceptance выполнен, traceability IDs и research log обновлены, нет необъяснённого изменения frozen protocol. Активное время указано отдельно от ожидания compute/access. Batch tasks — контейнеры повторяемых subtasks по1–4 h; не одна неограниченная задача. Все proposed functions/flags ниже ещё не существуют, если прямо не сказано «существует».
 
@@ -12,7 +12,7 @@ Baseline2026-10-30: ниже **будущие задачи**, они не вып
 
 | ID | Конкретное действие и files | Точная команда после/для работы | Проверяемый результат |
 |---|---|---|---|
-| P033-001 | Принять Tier B или reduced scope; внести D011–D020 status, official unknowns в docs/decisions.md и RISKS_AND_OPEN_QUESTIONS.md | `git diff -- docs/decisions.md docs/RISKS_AND_OPEN_QUESTIONS.md` | Датированный decisions diff; scope/primary model/general-clinical fence, неизвестная rubric не выдумана |
+| P033-001 / DONE | Scope baseline, Tier B working target, D011–D020 dispositions и official unknowns записаны | `git show ea1de5a --stat`; `git show b6b88e0 --stat` | [Decision ledger](decisions.md), [unknowns](RISKS_AND_OPEN_QUESTIONS.md), acceptance checklist ниже; full evaluation freeze остаётся P033-023 |
 | P033-002 | Добавить Windows CI, format/lock check; описать workspace temp/cache и clean-clone commands в .github/workflows/ci.yml, docs/reproducibility.md | `uv lock --check --offline`; `uv run --locked ruff check .`; `uv run --locked ruff format --check .`; `uv run --locked pytest -q --basetemp=artifacts/pytest_tmp` | Offline suite green; CI workflow matrix review/actual CI URLs после обычного authorized commit workflow; baseline35 tests уже проверены |
 | P033-003 | Source/license/admission cards пяти pilots, docs/data_dictionary.md; проверить IDs/versions/terms, не менять данные ради winners | `uv run --locked p033 datasets --output artifacts/pilot_registry.json`; `git diff -- docs/data_dictionary.md configs/datasets.toml` | 5 source cards: source/version/license evidence/family/target/time/roles/unknowns |
 | P033-004 | Написать tests/test_preprocessing.py на existing checked wrappers, guard/leakage/all-missing | `uv run --locked pytest -q tests/test_preprocessing.py --basetemp=artifacts/pytest_tmp` | New file создаётся этой задачей; finite dimensions, pre-allocation rejection и train-only fit доказаны fixtures |
@@ -29,12 +29,22 @@ Baseline2026-10-30: ниже **будущие задачи**, они не вып
 
 ### P033-001 — Scope и research decisions
 
-- **Phase / priority / status / роль:** PH0 / P0 / DECISION / R+V; **2–4 h**, compute0.
+- **Phase / priority / status / роль:** PH0 / P0 / **DONE, 2026-10-30** / R+V (предложенные роли); **2–4 h план**, фактическая трудоёмкость не измерялась, ML compute0.
 - **Зависимости / inputs:** аудит, пользовательское задание, existing protocol/D001–D010; внешняя rubric если предоставлена.
 - **Steps:** 1) сопоставить title/ID/objective; 2) записать official/repo/proposed/unknown; 3) выбрать Tier и resource assumptions; 4) принять/отложить D011–D020 с impact; 5) запретить final-outcome tuning.
 - **Files/functions:** docs/decisions.md, docs/RISKS_AND_OPEN_QUESTIONS.md, configs/project.toml только после naming decision; новых code functions нет.
 - **Outputs / tests / acceptance:** decisions ledger; T09, V читает отсутствие invented university constraints; критерии и scope зарегистрированы.
 - **Риск / DoD:** unresolved rubric не блокирует инженерные fixes; common DoD + reproducible scope baseline.
+
+**Acceptance evidence (documentation scope, T09 static/self-review):**
+
+- [x] ID/title/working extension name, RQ1–RQ3 и actual code scope сопоставлены в [scope baseline](decisions.md#p033-001--scope-baseline-2026-10-30), OFFICIAL / REPOSITORY DECISION / RESEARCH RECOMMENDATION / OPTIONAL / UNKNOWN разделены; university rubric/deadlines не придуманы, Q11 naming не закрыт переименованием.
+- [x] Tier B выбран рабочей целью; dataset counts/effort/compute явно planning assumptions до P033-012/014/015/029, без обязательств университета или неподтверждённой feasibility.
+- [x] Для всех D011–D020 записаны status, decision/rationale, source/assumptions, protocol/result compatibility, зависимости/verification timing и tasks; accepted design отделён от implemented/verified. Ledger: scope commit `ea1de5a`, research commit `b6b88e0`.
+- [x] Two pipelines, target MLP−GBDT, operational margin0.01, family evaluation, general/clinical fence, separate zero-shot transfer и допустимость negative/inconclusive findings зафиксированы. Primary Ridge/LOGO baseline выбран prospectively, P033-023 остаётся DECISION до полного manifest.
+- [x] Markdown links/anchors, table columns, task/decision identifiers и `git diff --check` проверены; D001–D010, frozen0.1/alias, configs/settings, implementation/dependencies неизменны. Master/risks/experiment plan/backlog и [research log](research_log.md#2026-10-30--p033-001-scope-and-research-decisions) согласованы; independent human peer review не выдаётся за выполненный.
+
+Остаток **вне completion этой карточки**: внешние Q01/Q02/Q06/Q08/Q09/Q11, доступные active hours из Q03; будущие source-specific Q04, feature/sampler Q07, publication Q10, bootstrap/family feasibility и P033-023 manifest. Эти проверки принадлежат указанным downstream tasks, не подменены assumptions; отсутствие rubric не останавливает P033-002. Другие task statuses этим завершением не повышаются.
 
 ### P033-002 — Environment и CI portability
 
@@ -230,6 +240,7 @@ Baseline2026-10-30: ниже **будущие задачи**, они не вып
 - **PH0/10 / P0 / DECISION / R+V; 2–4 h**,before018; optional nested implementation additional3–4h explicitly Tier B sensitivity.
 - **Deps:** 001/014; input candidate family identities, not final performance.
 - **Steps:** LOGO primary; assign any lockbox groups; fix Ridge and primary paired regret metric; predefine sensitivity/secondary comparisons; if tuning enabled implement grouped inner splits/default for tiny n; record immutable manifest timestamp/hash.
+- **Baseline из P033-001 (не completion P033-023):** [D013/D014](decisions.md#d013--prespecified-primary-meta-model) уже выбирают fixed scaled Ridgeα1, family LOGO, equal-dataset paired regret vs best fixed только на meta-train; D012 clinical fence обязателен, D015/D016/D018 ещё proposed. На candidate source/family identities P033-014 уточнить grouping/eligible folds/rows, primary feature/sampling/NA contract, stability/multiplicity и secondary policy. Nested tuning только optional secondary, lockbox feasibility/allocation deferred; redesign после OOF — untouched evaluation или exploratory label. Всё это внести в prospective timestamp/hash manifest до P033-018/final results, без выбора main model по outcomes. Manifest и проверки пока не выполнены.
 - **Files:** configs/experiments/recommender.toml, docs/decisions.md, evaluation.py only for nested option.
 - **Outputs/tests/AC:** T07/T09; no source/family overlap and no final data-driven main-model selection.
 - **Risk/DoD:** small n for nested CV→fixed primary, not random row split; common DoD.
@@ -408,4 +419,4 @@ Critical path по зависимостям:001→004/005/006/007/008→009/010�
 
 Активная работа Tier B ориентировочно **160–260 h** с учётом reuse, review и доработок; optional nested HPO/повторные source reviews могут увеличить оценку. Для budget резервировать **190–310 h** при environment/access failures. Не складывать repeated pilot fits, labels reuse и new runs дважды. Tier A сокращает расширение/features/ablations, но не P0 validity, baselines и clinical fence. Tier C добавляет60–140h и model compute; сильная полноценная reproduction может добавить больше и оценивается отдельно.
 
-Milestones: M0 scope+gates; M1 real smoke5; M2 first valid full+cost; M3 independent dataset corpus+complete benchmarks; M4 primary OOF baseline comparison; M5 zero-shot clinical+uncertainty; M6 reproducible report/slides/demo. При gate failure исправить конкретный defect, обновить assumptions/estimates и продолжить; не объявлять DONE по названию файла.
+Milestones: M0 scope+gates (P033-001 DONE, source cards/P033-023 ещё открыты; весь M0 не DONE); M1 real smoke5; M2 first valid full+cost; M3 independent dataset corpus+complete benchmarks; M4 primary OOF baseline comparison; M5 zero-shot clinical+uncertainty; M6 reproducible report/slides/demo. При gate failure исправить конкретный defect, обновить assumptions/estimates и продолжить; не объявлять DONE по названию файла. Следующая P033-002 READY; её implementation/CI runs в P033-001 не выполнялись.
