@@ -1,0 +1,392 @@
+{
+  ".github/workflows/ci.yml": {
+    "mtime": 1793344972.660257,
+    "seen": 1793393945.083117,
+    "ast_hash": "16aacde7be0704c0a16c40a727d86959",
+    "semantic_hash": "16aacde7be0704c0a16c40a727d86959"
+  },
+  "pyproject.toml": {
+    "mtime": 1790251571.7824996,
+    "seen": 1793393945.083117,
+    "ast_hash": "9e96f55c0c9b696ef7bffc23532f0349",
+    "semantic_hash": "9e96f55c0c9b696ef7bffc23532f0349"
+  },
+  "schemas/dataset_registry.schema.json": {
+    "mtime": 1790251571.1945996,
+    "seen": 1793393945.083117,
+    "ast_hash": "41f5945b16edaa7d8eee6bf67a7785f5",
+    "semantic_hash": "41f5945b16edaa7d8eee6bf67a7785f5"
+  },
+  "schemas/meta_dataset.schema.json": {
+    "mtime": 1790251601.969237,
+    "seen": 1793393945.083117,
+    "ast_hash": "c0f975dfff90ce474c3c4f7ace6324ec",
+    "semantic_hash": "c0f975dfff90ce474c3c4f7ace6324ec"
+  },
+  "schemas/model_run.schema.json": {
+    "mtime": 1790251601.9704194,
+    "seen": 1793393945.083117,
+    "ast_hash": "06171da19389f79103d7b680b35ecc90",
+    "semantic_hash": "06171da19389f79103d7b680b35ecc90"
+  },
+  "scripts/audit_datasets.py": {
+    "mtime": 1790251601.9704194,
+    "seen": 1793393945.083117,
+    "ast_hash": "8278c899f11e1939f452c87a5b3cac43",
+    "semantic_hash": "8278c899f11e1939f452c87a5b3cac43"
+  },
+  "scripts/build_meta_dataset.py": {
+    "mtime": 1790254600.4401073,
+    "seen": 1793393945.083117,
+    "ast_hash": "4a4d492eb1ac462f54b65760bdffc3cf",
+    "semantic_hash": "4a4d492eb1ac462f54b65760bdffc3cf"
+  },
+  "scripts/checkpoint1/mbgm_audit.py": {
+    "mtime": 1790251571.3305075,
+    "seen": 1793393945.083117,
+    "ast_hash": "223a2952c38a5579881e25815b720170",
+    "semantic_hash": "223a2952c38a5579881e25815b720170"
+  },
+  "scripts/checkpoint1/run_upstream_audit.sh": {
+    "mtime": 1790251571.345279,
+    "seen": 1793393945.083117,
+    "ast_hash": "a53b7b3a4644b2add32c3049f79fc9e3",
+    "semantic_hash": "a53b7b3a4644b2add32c3049f79fc9e3"
+  },
+  "scripts/collect_openml_results.py": {
+    "mtime": 1790251601.9731538,
+    "seen": 1793393945.083117,
+    "ast_hash": "f859e03bda82b9a8b13db7e72ef36ae3",
+    "semantic_hash": "f859e03bda82b9a8b13db7e72ef36ae3"
+  },
+  "scripts/evaluate_recommender.py": {
+    "mtime": 1790251601.9741385,
+    "seen": 1793393945.083117,
+    "ast_hash": "ea750f2e28e688d9f0a562e482679901",
+    "semantic_hash": "ea750f2e28e688d9f0a562e482679901"
+  },
+  "scripts/make_figures.py": {
+    "mtime": 1790251571.290335,
+    "seen": 1793393945.083117,
+    "ast_hash": "44c51a52064204aebd152baccc83ac3d",
+    "semantic_hash": "44c51a52064204aebd152baccc83ac3d"
+  },
+  "scripts/run_clinical_evaluation.py": {
+    "mtime": 1790251571.2544515,
+    "seen": 1793393945.083117,
+    "ast_hash": "a359f24d20e3b42b79d50e6833fe786f",
+    "semantic_hash": "a359f24d20e3b42b79d50e6833fe786f"
+  },
+  "scripts/run_reproduction.py": {
+    "mtime": 1790254600.442279,
+    "seen": 1793393945.083117,
+    "ast_hash": "dc65132c0bf1b1daa3a9469dab29b744",
+    "semantic_hash": "dc65132c0bf1b1daa3a9469dab29b744"
+  },
+  "scripts/train_recommender.py": {
+    "mtime": 1790251601.976326,
+    "seen": 1793393945.083117,
+    "ast_hash": "f93dbbc80676c3a9e0934a8bd559787d",
+    "semantic_hash": "f93dbbc80676c3a9e0934a8bd559787d"
+  },
+  "src/model_recommender/__init__.py": {
+    "mtime": 1790251571.483035,
+    "seen": 1793393945.083117,
+    "ast_hash": "4867131295172353fe6c2295851defc7",
+    "semantic_hash": "4867131295172353fe6c2295851defc7"
+  },
+  "src/model_recommender/audit.py": {
+    "mtime": 1790254600.4467003,
+    "seen": 1793393945.083117,
+    "ast_hash": "a84a12118af8a3180af0d320e27ed704",
+    "semantic_hash": "a84a12118af8a3180af0d320e27ed704"
+  },
+  "src/model_recommender/benchmark.py": {
+    "mtime": 1790251571.4438303,
+    "seen": 1793393945.083117,
+    "ast_hash": "14fb043d027f5a668aadcc6e8d77f4d8",
+    "semantic_hash": "14fb043d027f5a668aadcc6e8d77f4d8"
+  },
+  "src/model_recommender/cli.py": {
+    "mtime": 1790251661.3203664,
+    "seen": 1793393945.083117,
+    "ast_hash": "7cb9fc2592f1fcbd7f338cdebef4d4ad",
+    "semantic_hash": "7cb9fc2592f1fcbd7f338cdebef4d4ad"
+  },
+  "src/model_recommender/clinical.py": {
+    "mtime": 1790251571.5209286,
+    "seen": 1793393945.083117,
+    "ast_hash": "fb2a5988a2d6f5069e4cc72d44d8ed78",
+    "semantic_hash": "fb2a5988a2d6f5069e4cc72d44d8ed78"
+  },
+  "src/model_recommender/datasets.py": {
+    "mtime": 1790251571.3586073,
+    "seen": 1793393945.083117,
+    "ast_hash": "24b71e62b159dc63d5e8fcd304f8f55f",
+    "semantic_hash": "24b71e62b159dc63d5e8fcd304f8f55f"
+  },
+  "src/model_recommender/evaluation.py": {
+    "mtime": 1790251601.9792628,
+    "seen": 1793393945.083117,
+    "ast_hash": "693a070eb0d515dd4c7c00015a9b2fd1",
+    "semantic_hash": "693a070eb0d515dd4c7c00015a9b2fd1"
+  },
+  "src/model_recommender/features.py": {
+    "mtime": 1790251571.4164486,
+    "seen": 1793393945.083117,
+    "ast_hash": "a87e8aa85c80fa208dcd403f587ce2ea",
+    "semantic_hash": "a87e8aa85c80fa208dcd403f587ce2ea"
+  },
+  "src/model_recommender/meta_dataset.py": {
+    "mtime": 1790254600.4433236,
+    "seen": 1793393945.083117,
+    "ast_hash": "430c3d4689999b0f8647b668f92716d9",
+    "semantic_hash": "430c3d4689999b0f8647b668f92716d9"
+  },
+  "src/model_recommender/model_families.py": {
+    "mtime": 1790254600.4457211,
+    "seen": 1793393945.083117,
+    "ast_hash": "a469c517d4458215085d37474e1bcfd7",
+    "semantic_hash": "a469c517d4458215085d37474e1bcfd7"
+  },
+  "src/model_recommender/openml_loader.py": {
+    "mtime": 1790251571.5330875,
+    "seen": 1793393945.083117,
+    "ast_hash": "99be768d0686634f60397a3de8f44396",
+    "semantic_hash": "99be768d0686634f60397a3de8f44396"
+  },
+  "src/model_recommender/preprocessing.py": {
+    "mtime": 1790254590.888914,
+    "seen": 1793393945.083117,
+    "ast_hash": "14e2222bf25a01dad9d2721765828d11",
+    "semantic_hash": "14e2222bf25a01dad9d2721765828d11"
+  },
+  "src/model_recommender/recommender.py": {
+    "mtime": 1790251601.9834762,
+    "seen": 1793393945.083117,
+    "ast_hash": "3a03ebc12a774317d7482269f0c37d02",
+    "semantic_hash": "3a03ebc12a774317d7482269f0c37d02"
+  },
+  "src/model_recommender/registry.py": {
+    "mtime": 1790251571.4034007,
+    "seen": 1793393945.083117,
+    "ast_hash": "09f14550219b8d688bd2ca6414c9d9d9",
+    "semantic_hash": "09f14550219b8d688bd2ca6414c9d9d9"
+  },
+  "src/model_recommender/reporting.py": {
+    "mtime": 1790251571.388164,
+    "seen": 1793393945.083117,
+    "ast_hash": "bec364d9e8cae8762bf7a6e00a834410",
+    "semantic_hash": "bec364d9e8cae8762bf7a6e00a834410"
+  },
+  "src/model_recommender/runner.py": {
+    "mtime": 1790254600.4433236,
+    "seen": 1793393945.083117,
+    "ast_hash": "00c1b135307dd199de54b9bc140e34fb",
+    "semantic_hash": "00c1b135307dd199de54b9bc140e34fb"
+  },
+  "tests/conftest.py": {
+    "mtime": 1793344765.613563,
+    "seen": 1793393945.083117,
+    "ast_hash": "68e9dadfd7b2cf81e2600c989d0fd3e9",
+    "semantic_hash": "68e9dadfd7b2cf81e2600c989d0fd3e9"
+  },
+  "tests/test_audit.py": {
+    "mtime": 1790251601.9847338,
+    "seen": 1793393945.083117,
+    "ast_hash": "17b70e0c541cd11f069dff2a0a18c8ed",
+    "semantic_hash": "17b70e0c541cd11f069dff2a0a18c8ed"
+  },
+  "tests/test_clinical.py": {
+    "mtime": 1790251571.6790335,
+    "seen": 1793393945.083117,
+    "ast_hash": "755b4f8a1416b5da2a913e84b221d212",
+    "semantic_hash": "755b4f8a1416b5da2a913e84b221d212"
+  },
+  "tests/test_datasets.py": {
+    "mtime": 1790251571.64055,
+    "seen": 1793393945.083117,
+    "ast_hash": "86c7da75b87ee788f73fcfd24bdeebbe",
+    "semantic_hash": "86c7da75b87ee788f73fcfd24bdeebbe"
+  },
+  "tests/test_evaluation.py": {
+    "mtime": 1790251601.9865918,
+    "seen": 1793393945.083117,
+    "ast_hash": "804d60591297350b80b79e5c65d7ef3a",
+    "semantic_hash": "804d60591297350b80b79e5c65d7ef3a"
+  },
+  "tests/test_features.py": {
+    "mtime": 1790251571.6917813,
+    "seen": 1793393945.083117,
+    "ast_hash": "35a163688b2ecb3e2fcfdac553ab5cc9",
+    "semantic_hash": "35a163688b2ecb3e2fcfdac553ab5cc9"
+  },
+  "tests/test_meta_dataset.py": {
+    "mtime": 1790251601.9876277,
+    "seen": 1793393945.083117,
+    "ast_hash": "c44e969c3d726ef64d83c3d0760b519c",
+    "semantic_hash": "c44e969c3d726ef64d83c3d0760b519c"
+  },
+  "tests/test_offline.py": {
+    "mtime": 1793344766.002728,
+    "seen": 1793393945.083117,
+    "ast_hash": "fbee83eb8cec91bf30c16c370e47789b",
+    "semantic_hash": "fbee83eb8cec91bf30c16c370e47789b"
+  },
+  "tests/test_openml_loader.py": {
+    "mtime": 1790251571.5776567,
+    "seen": 1793393945.083117,
+    "ast_hash": "e5a37fd53a4c6315ea1c29ca10a6dd1a",
+    "semantic_hash": "e5a37fd53a4c6315ea1c29ca10a6dd1a"
+  },
+  "tests/test_recommender.py": {
+    "mtime": 1790251601.9889262,
+    "seen": 1793393945.083117,
+    "ast_hash": "89390b1e694cf1ba38508d559acf34ce",
+    "semantic_hash": "89390b1e694cf1ba38508d559acf34ce"
+  },
+  "tests/test_registry.py": {
+    "mtime": 1790251571.5907097,
+    "seen": 1793393945.083117,
+    "ast_hash": "c38547aea0452cea73ab4356f6860619",
+    "semantic_hash": "c38547aea0452cea73ab4356f6860619"
+  },
+  "tests/test_runner.py": {
+    "mtime": 1790251601.989901,
+    "seen": 1793393945.083117,
+    "ast_hash": "f8caed0c5d93bcbbdfd0a9fb5af7978b",
+    "semantic_hash": "f8caed0c5d93bcbbdfd0a9fb5af7978b"
+  },
+  "ARCHITECTURE.md": {
+    "mtime": 1790251657.2127726,
+    "seen": 1793393945.083117,
+    "ast_hash": "5b4f6b4df51c731b74a2273acb583677",
+    "semantic_hash": "5b4f6b4df51c731b74a2273acb583677"
+  },
+  "CHANGELOG_2026-09-24.md": {
+    "mtime": 1790251601.9521532,
+    "seen": 1793393945.083117,
+    "ast_hash": "bbb8f552cbb463da3c51966d9b20948a",
+    "semantic_hash": "bbb8f552cbb463da3c51966d9b20948a"
+  },
+  "NEXT_STEPS.md": {
+    "mtime": 1793342904.7312632,
+    "seen": 1793393945.083117,
+    "ast_hash": "15049d7546d2e333b40207987afc73ae",
+    "semantic_hash": "15049d7546d2e333b40207987afc73ae"
+  },
+  "README.md": {
+    "mtime": 1793345071.4556062,
+    "seen": 1793393945.083117,
+    "ast_hash": "c9559fc40845586895dfbe1ac0f2770e",
+    "semantic_hash": "c9559fc40845586895dfbe1ac0f2770e"
+  },
+  "SCAFFOLD_MANIFEST.txt": {
+    "mtime": 1790251601.9566214,
+    "seen": 1793393945.083117,
+    "ast_hash": "1fc88258e86a3aa6973ea2b63f8a899d",
+    "semantic_hash": "1fc88258e86a3aa6973ea2b63f8a899d"
+  },
+  "docs/EXPERIMENT_PLAN.md": {
+    "mtime": 1793344356.5930383,
+    "seen": 1793393945.083117,
+    "ast_hash": "a96b4882b07e3bc6c4cbb2e502ad2d00",
+    "semantic_hash": "a96b4882b07e3bc6c4cbb2e502ad2d00"
+  },
+  "docs/FINAL_DELIVERABLES.md": {
+    "mtime": 1793342903.9015715,
+    "seen": 1793393945.083117,
+    "ast_hash": "985a42a47b236e61b5fbf88ab48324c6",
+    "semantic_hash": "985a42a47b236e61b5fbf88ab48324c6"
+  },
+  "docs/MASTER_PLAN.md": {
+    "mtime": 1793345367.9034216,
+    "seen": 1793393945.083117,
+    "ast_hash": "a7a7cfe10f5e66409f00c8a2212eacb2",
+    "semantic_hash": "a7a7cfe10f5e66409f00c8a2212eacb2"
+  },
+  "docs/PROJECT_AUDIT.md": {
+    "mtime": 1793343066.601472,
+    "seen": 1793393945.083117,
+    "ast_hash": "2ccb4f5f6032bfb273eed0553bb36c7d",
+    "semantic_hash": "2ccb4f5f6032bfb273eed0553bb36c7d"
+  },
+  "docs/REQUIREMENTS.md": {
+    "mtime": 1793341647.5938625,
+    "seen": 1793393945.083117,
+    "ast_hash": "2f0a1abc394e12c6ab7686981429e38a",
+    "semantic_hash": "2f0a1abc394e12c6ab7686981429e38a"
+  },
+  "docs/RISKS_AND_OPEN_QUESTIONS.md": {
+    "mtime": 1793344356.5953124,
+    "seen": 1793393945.083117,
+    "ast_hash": "59f4fc28c4b50715f40eb38e4b0d6ba7",
+    "semantic_hash": "59f4fc28c4b50715f40eb38e4b0d6ba7"
+  },
+  "docs/TASK_BACKLOG.md": {
+    "mtime": 1793345521.2816596,
+    "seen": 1793393945.083117,
+    "ast_hash": "cdfc9286376d3f1cb6f823b809ff4946",
+    "semantic_hash": "cdfc9286376d3f1cb6f823b809ff4946"
+  },
+  "docs/TEST_AND_ACCEPTANCE_PLAN.md": {
+    "mtime": 1793345443.9368334,
+    "seen": 1793393945.083117,
+    "ast_hash": "7e9e767a3191307d40f8594e6fe9dda1",
+    "semantic_hash": "7e9e767a3191307d40f8594e6fe9dda1"
+  },
+  "docs/checkpoint1/README.md": {
+    "mtime": 1790251571.0577872,
+    "seen": 1793393945.083117,
+    "ast_hash": "426662a5647f9687736974e48aeed816",
+    "semantic_hash": "426662a5647f9687736974e48aeed816"
+  },
+  "docs/clinical_data_policy.md": {
+    "mtime": 1790251571.0465636,
+    "seen": 1793393945.083117,
+    "ast_hash": "c779a9c19dd308a9f48f7b4513311706",
+    "semantic_hash": "c779a9c19dd308a9f48f7b4513311706"
+  },
+  "docs/data_dictionary.md": {
+    "mtime": 1790251571.0273795,
+    "seen": 1793393945.083117,
+    "ast_hash": "b037e6f2eaacaee5d6ed48679e84a660",
+    "semantic_hash": "b037e6f2eaacaee5d6ed48679e84a660"
+  },
+  "docs/decisions.md": {
+    "mtime": 1793344356.5988288,
+    "seen": 1793393945.083117,
+    "ast_hash": "c6e62556495c9eefa9c34b2ef9dbd269",
+    "semantic_hash": "c6e62556495c9eefa9c34b2ef9dbd269"
+  },
+  "docs/experiment-protocol.md": {
+    "mtime": 1790251657.6357596,
+    "seen": 1793393945.083117,
+    "ast_hash": "4772411fd7e3bf853739c76bf28904b2",
+    "semantic_hash": "4772411fd7e3bf853739c76bf28904b2"
+  },
+  "docs/experiment_protocol.md": {
+    "mtime": 1790251571.0368454,
+    "seen": 1793393945.083117,
+    "ast_hash": "35ca0fe24457c43a04385c37ceaa446e",
+    "semantic_hash": "35ca0fe24457c43a04385c37ceaa446e"
+  },
+  "docs/reproducibility.md": {
+    "mtime": 1793345331.5199053,
+    "seen": 1793393945.083117,
+    "ast_hash": "0a376bec2d7d2855061ed43d2da182fa",
+    "semantic_hash": "0a376bec2d7d2855061ed43d2da182fa"
+  },
+  "docs/research_log.md": {
+    "mtime": 1793345444.320712,
+    "seen": 1793393945.083117,
+    "ast_hash": "1ec33aaee79d7298744a94e980b58def",
+    "semantic_hash": "1ec33aaee79d7298744a94e980b58def"
+  },
+  "external/README.md": {
+    "mtime": 1790251571.0670257,
+    "seen": 1793393945.083117,
+    "ast_hash": "e6f4298e96bf17c1eef1a1400f423491",
+    "semantic_hash": "e6f4298e96bf17c1eef1a1400f423491"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "documents": {
+    "ARCHITECTURE.md": {
+      "reported_lines": 58,
+      "actual_lines": 58,
+      "complete": true
+    },
+    "CHANGELOG_2026-09-24.md": {
+      "reported_lines": 57,
+      "actual_lines": 57,
+      "complete": true
+    },
+    "NEXT_STEPS.md": {
+      "reported_lines": 197,
+      "actual_lines": 197,
+      "complete": true
+    },
+    "README.md": {
+      "reported_lines": 189,
+      "actual_lines": 189,
+      "complete": true
+    },
+    "SCAFFOLD_MANIFEST.txt": {
+      "reported_lines": 82,
+      "actual_lines": 82,
+      "complete": true
+    },
+    "docs/checkpoint1/README.md": {
+      "reported_lines": 6,
+      "actual_lines": 6,
+      "complete": true
+    },
+    "external/README.md": {
+      "reported_lines": 8,
+      "actual_lines": 8,
+      "complete": true
+    },
+    "docs/EXPERIMENT_PLAN.md": {
+      "reported_lines": 209,
+      "actual_lines": 209,
+      "complete": true
+    },
+    "docs/FINAL_DELIVERABLES.md": {
+      "reported_lines": 157,
+      "actual_lines": 157,
+      "complete": true
+    },
+    "docs/MASTER_PLAN.md": {
+      "reported_lines": 275,
+      "actual_lines": 275,
+      "complete": true
+    },
+    "docs/REQUIREMENTS.md": {
+      "reported_lines": 132,
+      "actual_lines": 132,
+      "complete": true
+    },
+    "docs/RISKS_AND_OPEN_QUESTIONS.md": {
+      "reported_lines": 70,
+      "actual_lines": 70,
+      "complete": true
+    },
+    "docs/TASK_BACKLOG.md": {
+      "reported_lines": 433,
+      "actual_lines": 433,
+      "complete": true
+    },
+    "docs/TEST_AND_ACCEPTANCE_PLAN.md": {
+      "reported_lines": 68,
+      "actual_lines": 68,
+      "complete": true
+    },
+    "docs/PROJECT_AUDIT.md": {
+      "reported_lines": 124,
+      "actual_lines": 124,
+      "complete": true
+    },
+    "docs/clinical_data_policy.md": {
+      "reported_lines": 3,
+      "actual_lines": 3,
+      "complete": true
+    },
+    "docs/data_dictionary.md": {
+      "reported_lines": 5,
+      "actual_lines": 5,
+      "complete": true
+    },
+    "docs/decisions.md": {
+      "reported_lines": 175,
+      "actual_lines": 175,
+      "complete": true
+    },
+    "docs/experiment-protocol.md": {
+      "reported_lines": 36,
+      "actual_lines": 36,
+      "complete": true
+    },
+    "docs/experiment_protocol.md": {
+      "reported_lines": 3,
+      "actual_lines": 3,
+      "complete": true
+    },
+    "docs/reproducibility.md": {
+      "reported_lines": 193,
+      "actual_lines": 193,
+      "complete": true
+    },
+    "docs/research_log.md": {
+      "reported_lines": 69,
+      "actual_lines": 69,
+      "complete": true
+    }
+  },
+  "document_count": 22,
+  "code_file_count": 43,
+  "ast_no_symbols": [
+    "pyproject.toml",
+    "src/model_recommender/__init__.py"
+  ],
+  "chunk_02_recovery": "Usage limit interrupted the final text response after complete JSON was saved; agent receipt and root readback validated the saved full result."
+}
