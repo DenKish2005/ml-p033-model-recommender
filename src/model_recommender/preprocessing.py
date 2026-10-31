@@ -56,6 +56,8 @@ class DensePreprocessor:
     _ready: bool = field(init=False, default=False)
 
     def _validate_columns(self, X: pd.DataFrame) -> None:
+        if not X.columns.is_unique:
+            raise ValueError("Feature columns must be unique.")
         missing = set(self.roles.all) - set(X.columns)
         if missing:
             raise ValueError(f"Missing preprocessing columns: {sorted(missing)}")
@@ -76,6 +78,7 @@ class DensePreprocessor:
     def fit_structure(self, X: pd.DataFrame) -> DensePreprocessor:
         """Fit imputers/encoder and determine final width without materialising one-hot output."""
 
+        self._ready = False
         self._validate_columns(X)
         names: list[str] = []
         total = 0
@@ -129,10 +132,18 @@ class DensePreprocessor:
             raise ValueError("Preprocessor structure has not been fitted.")
         return self._feature_names.copy()
 
-    def transform(self, X: pd.DataFrame) -> np.ndarray:
+    def transform(
+        self, X: pd.DataFrame, *, limit_bytes: int = DEFAULT_MATRIX_LIMIT_BYTES
+    ) -> np.ndarray:
+        """Transform within a per-matrix limit, including when called directly.
+
+        The limit applies to this call. Original-width imputation intermediates,
+        scaled copies and concatenation can consume additional process memory.
+        """
         if not self._ready:
             raise ValueError("Preprocessor is not ready; use fit_transform_checked first.")
         self._validate_columns(X)
+        ensure_dense_matrix_fits(self, len(X), limit_bytes=limit_bytes)
         blocks: list[np.ndarray] = []
         if self.roles.numeric:
             assert self.numeric_imputer is not None
@@ -186,7 +197,7 @@ def fit_transform_checked(
     preprocessor.fit_structure(X_train)
     ensure_dense_matrix_fits(preprocessor, len(X_train), limit_bytes=limit_bytes)
     preprocessor.fit_scaler(X_train)
-    return preprocessor.transform(X_train)
+    return preprocessor.transform(X_train, limit_bytes=limit_bytes)
 
 
 def transform_checked(
@@ -195,5 +206,4 @@ def transform_checked(
     *,
     limit_bytes: int = DEFAULT_MATRIX_LIMIT_BYTES,
 ) -> np.ndarray:
-    ensure_dense_matrix_fits(preprocessor, len(X), limit_bytes=limit_bytes)
-    return preprocessor.transform(X)
+    return preprocessor.transform(X, limit_bytes=limit_bytes)

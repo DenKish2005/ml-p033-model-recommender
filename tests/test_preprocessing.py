@@ -11,7 +11,11 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 from model_recommender import runner
 from model_recommender.preprocessing import (
+    DEFAULT_MATRIX_LIMIT_BYTES,
     DensePreprocessor,
+    MatrixTooLargeError,
+    ensure_dense_matrix_fits,
+    estimate_dense_bytes,
     fit_transform_checked,
     infer_feature_roles,
     make_preprocessor,
@@ -106,7 +110,10 @@ def test_nullable_bool_keeps_categorical_role_and_missing_token():
 
 
 @pytest.mark.parametrize("phase", ["infer", "fit", "transform"])
-@pytest.mark.parametrize("bad_columns", [["n", "n"], ["n", "c", "n"], ["n"]])
+@pytest.mark.parametrize(
+    "bad_columns",
+    [["n", "n"], ["n", "c", "n"], ["n", "c", "c"], ["n", "c", "extra", "extra"], ["n"]],
+)
 def test_missing_or_duplicate_columns_fail_predictably(phase, bad_columns):
     train = pd.DataFrame({"n": [1.0, 2.0], "c": ["a", "b"]})
     bad = pd.DataFrame([[1] * len(bad_columns)] * 2, columns=bad_columns)
@@ -255,3 +262,145 @@ def test_runner_fits_preprocessing_on_inner_train_and_outer_train_only(monkeypat
         assert label in {"structure", "scaler"}
         assert scaling == (family == "DNN")
         pd.testing.assert_frame_equal(actual, expected)
+
+
+def memory_frame():
+    # One numeric + its missing indicator + three fitted OHE categories = width 5.
+    return pd.DataFrame({"n": [0.0, np.nan, 6.0], "c": ["a", "b", "c"]})
+
+
+def test_float64_estimate_and_default_limit():
+    assert DEFAULT_MATRIX_LIMIT_BYTES == 536_870_912
+    assert estimate_dense_bytes(3, 5) == 120
+    assert estimate_dense_bytes(0, 5) == 0
+    # Python integer arithmetic must not overflow for a large size estimate.
+    assert estimate_dense_bytes(2**32, 2**32) == 2**67
+    pre = make_preprocessor(memory_frame(), scale_numeric=False)
+    with pytest.raises(ValueError, match="structure must be fitted"):
+        ensure_dense_matrix_fits(pre, 3)
+    pre.fit_structure(memory_frame())
+    assert pre.n_output_features_ == 5
+    assert ensure_dense_matrix_fits(pre, 3, limit_bytes=120) == 120
+    with pytest.raises(MatrixTooLargeError):
+        ensure_dense_matrix_fits(pre, 3, limit_bytes=112)
+
+
+@pytest.mark.parametrize("scale_numeric", [False, True])
+@pytest.mark.parametrize("operation", ["fit", "checked", "direct"])
+def test_guard_rejects_eight_bytes_over_before_materialization(
+    monkeypatch, operation, scale_numeric
+):
+    train = memory_frame()
+    pre = make_preprocessor(train, scale_numeric=scale_numeric)
+    if operation != "fit":
+        fit_transform_checked(pre, train, limit_bytes=120)
+    allocations = []
+
+    def forbidden(label):
+        def allocate(*args, **kwargs):
+            allocations.append(label)
+            raise AssertionError(f"Guard ran too late: {label}")
+
+        return allocate
+
+    monkeypatch.setattr(OneHotEncoder, "transform", forbidden("OHE"))
+    original_impute = SimpleImputer.transform
+
+    def impute(self, X, *args, **kwargs):
+        # Categorical structure fitting needs the original-width object array;
+        # numeric/indicator float64 and scaled output must wait for the guard.
+        if self.strategy == "median":
+            return forbidden("numeric imputation")(X)
+        return original_impute(self, X, *args, **kwargs)
+
+    monkeypatch.setattr(SimpleImputer, "transform", impute)
+    monkeypatch.setattr(StandardScaler, "fit", forbidden("scaler fit"))
+    monkeypatch.setattr(StandardScaler, "transform", forbidden("scaler transform"))
+    monkeypatch.setattr(np, "hstack", forbidden("concatenation"))
+    with pytest.raises(MatrixTooLargeError):
+        if operation == "fit":
+            fit_transform_checked(pre, train, limit_bytes=112)
+        elif operation == "checked":
+            transform_checked(pre, train, limit_bytes=112)
+        else:
+            pre.transform(train, limit_bytes=112)
+    assert allocations == []
+    assert pre.n_output_features_ == 5
+
+
+@pytest.mark.parametrize("scale_numeric", [False, True])
+def test_exact_limit_is_allowed_and_scoring_width_comes_from_train(monkeypatch, scale_numeric):
+    train = memory_frame()
+    pre = make_preprocessor(train, scale_numeric=scale_numeric)
+    original = OneHotEncoder.transform
+    ohe_shapes = []
+
+    def transform(self, X):
+        result = original(self, X)
+        ohe_shapes.append(result.shape)
+        return result
+
+    monkeypatch.setattr(OneHotEncoder, "transform", transform)
+    fitted = fit_transform_checked(pre, train, limit_bytes=120)
+    scoring = pd.DataFrame({"n": [3.0] * 3, "c": ["unknown"] * 3})
+    checked = transform_checked(pre, scoring, limit_bytes=120)
+    direct = pre.transform(scoring, limit_bytes=120)
+    assert fitted.nbytes == checked.nbytes == direct.nbytes == 120
+    assert_allclose(checked, direct)
+    assert_allclose(checked[:, 2:], np.zeros((3, 3)))
+    assert ohe_shapes == [(3, 3)] * 3
+    assert_array_equal(pre.onehot.categories_[0], ["a", "b", "c"])
+
+
+def test_direct_transform_cannot_bypass_default_guard(monkeypatch):
+    train = memory_frame()
+    pre = make_preprocessor(train, scale_numeric=False)
+    fit_transform_checked(pre, train)
+    # Simulate a fitted wide structure, without constructing any wide input/output.
+    pre.n_output_features_ = DEFAULT_MATRIX_LIMIT_BYTES // 8 + 1
+    calls = []
+    original = OneHotEncoder.transform
+
+    def transform(self, X):
+        calls.append(len(X))
+        return original(self, X)
+
+    monkeypatch.setattr(OneHotEncoder, "transform", transform)
+    with pytest.raises(MatrixTooLargeError):
+        pre.transform(train.iloc[:1])
+    assert calls == []
+
+
+def test_checked_custom_limit_above_default_is_forwarded(monkeypatch):
+    from model_recommender import preprocessing
+
+    original = preprocessing.ensure_dense_matrix_fits
+    limits = []
+
+    def guard(pre, rows, *, limit_bytes=DEFAULT_MATRIX_LIMIT_BYTES):
+        limits.append(limit_bytes)
+        return original(pre, rows, limit_bytes=limit_bytes)
+
+    monkeypatch.setattr(preprocessing, "ensure_dense_matrix_fits", guard)
+    pre = make_preprocessor(memory_frame(), scale_numeric=True)
+    custom_limit = DEFAULT_MATRIX_LIMIT_BYTES + 8
+    fit_transform_checked(pre, memory_frame(), limit_bytes=custom_limit)
+    transform_checked(pre, memory_frame(), limit_bytes=custom_limit)
+    assert limits and set(limits) == {custom_limit}
+    pre.transform(memory_frame())
+    assert limits[-1] == DEFAULT_MATRIX_LIMIT_BYTES
+
+
+def test_unfitted_transform_refuses_before_allocating():
+    pre = make_preprocessor(memory_frame(), scale_numeric=True)
+    with pytest.raises(ValueError, match="not ready"):
+        pre.transform(memory_frame())
+
+
+def test_failed_refit_does_not_leave_transform_ready():
+    pre = make_preprocessor(memory_frame(), scale_numeric=True)
+    fit_transform_checked(pre, memory_frame())
+    with pytest.raises(MatrixTooLargeError):
+        fit_transform_checked(pre, memory_frame(), limit_bytes=112)
+    with pytest.raises(ValueError, match="not ready"):
+        pre.transform(memory_frame())
