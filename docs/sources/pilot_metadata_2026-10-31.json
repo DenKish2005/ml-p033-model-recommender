@@ -1,0 +1,136 @@
+{
+  "accessed_on": "2026-10-31",
+  "timezone": "Asia/Qyzylorda",
+  "scope": "Selected fields transcribed from live OpenML JSON metadata; no dataset records or data downloads. Qualities include target in feature/symbolic counts. Missing counts are metadata, not a new data audit.",
+  "sources": [
+    {
+      "description_url": "https://www.openml.org/api/v1/json/data/31",
+      "features_url": "https://www.openml.org/api/v1/json/data/features/31",
+      "qualities_url": "https://www.openml.org/api/v1/json/data/qualities/31",
+      "description_fields": {
+        "id": "31",
+        "name": "credit-g",
+        "version": "1",
+        "description_version": "31",
+        "md5_checksum": "9a475053fed0c26ee95cd4525e50074c",
+        "default_target_attribute": "class",
+        "licence": "Public",
+        "visibility": "public",
+        "status": "active",
+        "original_data_url": "https://archive.ics.uci.edu/ml/datasets/statlog+(german+credit+data)"
+      },
+      "target_labels": [
+        "bad",
+        "good"
+      ],
+      "numeric_predictors": [
+        "duration",
+        "credit_amount",
+        "installment_commitment",
+        "residence_since",
+        "age",
+        "existing_credits",
+        "num_dependents"
+      ],
+      "categorical_predictors": [
+        "checking_status",
+        "credit_history",
+        "purpose",
+        "savings_status",
+        "employment",
+        "personal_status",
+        "other_parties",
+        "property_magnitude",
+        "other_payment_plans",
+        "housing",
+        "job",
+        "own_telephone",
+        "foreign_worker"
+      ],
+      "row_identifier_features": [],
+      "ignored_features": [],
+      "missing_values_by_feature": {},
+      "qualities": {
+        "NumberOfClasses": "2.0",
+        "NumberOfFeatures": "21.0",
+        "NumberOfInstances": "1000.0",
+        "NumberOfInstancesWithMissingValues": "0.0",
+        "NumberOfMissingValues": "0.0",
+        "NumberOfNumericFeatures": "7.0",
+        "NumberOfSymbolicFeatures": "14.0"
+      },
+      "registry_comparison": "MATCH: identity, target, label set, role sets, dimensions, flags; local data bytes NOT checked"
+    },
+    {
+      "description_url": "https://www.openml.org/api/v1/json/data/59",
+      "features_url": "https://www.openml.org/api/v1/json/data/features/59",
+      "qualities_url": "https://www.openml.org/api/v1/json/data/qualities/59",
+      "description_fields": {
+        "id": "59",
+        "name": "ionosphere",
+        "version": "1",
+        "description_version": "1",
+        "md5_checksum": "23dd3c8b5693e2848901fd1a0248ef42",
+        "default_target_attribute": "class",
+        "licence": "Public",
+        "visibility": "public",
+        "status": "active",
+        "original_data_url": "http://archive.ics.uci.edu/ml/datasets/Ionosphere"
+      },
+      "target_labels": [
+        "b",
+        "g"
+      ],
+      "numeric_predictors": [
+        "a01",
+        "a02",
+        "a03",
+        "a04",
+        "a05",
+        "a06",
+        "a07",
+        "a08",
+        "a09",
+        "a10",
+        "a11",
+        "a12",
+        "a13",
+        "a14",
+        "a15",
+        "a16",
+        "a17",
+        "a18",
+        "a19",
+        "a20",
+        "a21",
+        "a22",
+        "a23",
+        "a24",
+        "a25",
+        "a26",
+        "a27",
+        "a28",
+        "a29",
+        "a30",
+        "a31",
+        "a32",
+        "a33",
+        "a34"
+      ],
+      "categorical_predictors": [],
+      "row_identifier_features": [],
+      "ignored_features": [],
+      "missing_values_by_feature": {},
+      "qualities": {
+        "NumberOfClasses": "2.0",
+        "NumberOfFeatures": "35.0",
+        "NumberOfInstances": "351.0",
+        "NumberOfInstancesWithMissingValues": "0.0",
+        "NumberOfMissingValues": "0.0",
+        "NumberOfNumericFeatures": "34.0",
+        "NumberOfSymbolicFeatures": "1.0"
+      },
+      "registry_comparison": "MATCH: identity, target, label set, role sets, dimensions, flags; local data bytes NOT checked"
+    }
+  ]
+}
