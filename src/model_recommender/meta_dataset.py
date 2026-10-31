@@ -7,6 +7,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from model_recommender.result_validation import validate_benchmark_result
+
 META_TARGET = "performance_gap_mlp_minus_gbdt"
 IDENTIFIER_COLUMNS = {"dataset", "openml_id", "version", "family", "clinical"}
 OUTCOME_COLUMNS = {
@@ -23,8 +25,8 @@ def benchmark_result_to_row(
     *,
     require_research_valid: bool = True,
 ) -> dict[str, object]:
-    if require_research_valid and not result.get("research_valid"):
-        raise ValueError("Benchmark result is not a successful full-protocol research run.")
+    if require_research_valid:
+        validate_benchmark_result(result)
     aggregate = result.get("aggregate")
     if not isinstance(aggregate, dict):
         raise ValueError("Benchmark result has no aggregate scores.")

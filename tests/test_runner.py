@@ -11,6 +11,7 @@ from model_recommender import runner
 from model_recommender.datasets import LoadedDataset, read_registry
 from model_recommender.model_families import ModelCandidate, candidates_for_family
 from model_recommender.preprocessing import DensePreprocessor
+from model_recommender.result_validation import validate_benchmark_result
 from model_recommender.runner import BenchmarkProtocol, protocol_by_name, run_benchmark
 
 
@@ -59,6 +60,7 @@ def test_smoke_benchmark_runs_end_to_end():
     assert result["outer_splits"][0]["families"]["GBDT"]["all_trials_completed"]
     assert result["outer_splits"][0]["families"]["DNN"]["all_trials_completed"]
     assert len(result["outer_splits"][0]["families"]["GBDT"]["trials"]) == 2
+    validate_benchmark_result(result, BenchmarkProtocol.smoke())
 
 
 @pytest.mark.parametrize(
@@ -111,8 +113,8 @@ def test_unknown_protocol_name_is_rejected(name):
 def test_inner_selection_paired_rows_seed_reuse_and_refit(monkeypatch, mode, outer_favourite):
     """Real splits/preprocessing, stub fits/scores; full means 360+6 cheap calls.
 
-    No benchmark artifact is written or admitted. The full stub result exercises
-    orchestration only, not the P033-006 research-validity/admission boundary.
+    P033-006 also validates the complete stub output against the artifact contract;
+    this remains synthetic engineering evidence, not a scientific benchmark.
     """
     loaded = make_loaded()
     # Non-positional, shuffled row identities catch iloc/loc and accidental reordering.
@@ -219,6 +221,7 @@ def test_inner_selection_paired_rows_seed_reuse_and_refit(monkeypatch, mode, out
     monkeypatch.setattr(runner, "_prediction_scores", score)
     result = run_benchmark(loaded, protocol=protocol)
     assert result["status"] == "success"
+    validate_benchmark_result(result, protocol)
     if mode == "smoke":
         assert result["research_valid"] is False
         assert result["status_note"] == "Smoke mode is development-only."
