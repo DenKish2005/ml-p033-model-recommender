@@ -10,8 +10,16 @@
 Registry pins и scientific implementation сохранены; dataset downloads/benchmarks
 не выполнялись. Source admission ограничен указанными задачами; data integrity,
 duplicate/entity checks и tic-tac-toe symmetry policy остаются gates P033-008/009.
-Следующая P033-004 READY, не начата; P033-023 DECISION. Ниже roadmap и audit baseline
+P033-023 остаётся DECISION. Ниже roadmap и audit baseline
 описывают цели, а не подтверждают downstream implementation.
+
+**Обновление P033-004, 2026-10-31:** synthetic preprocessing verification DONE:
+54 focused tests, existing synthetic runner и полная offline suite92 passed;
+минимально исправлены categorical NA/bool compatibility, duplicate validation,
+direct-transform guard и readiness после failed refit. Windows/Ubuntu CI green.
+[Acceptance/remaining gaps](TASK_BACKLOG.md#p033-004--preprocessor-edgeleakage-verification),
+[новое evidence и CI](research_log.md#2026-10-31--p033-004-preprocessor-edgeleakage-verification).
+Следующая P033-005 READY, не начата; total RSS и source-level leakage не доказаны.
 
 ## 1. Как пользоваться комплектом
 
@@ -31,7 +39,7 @@ Engineering foundation уже существует: pinned5 OpenML registry, raw
 
 **Не подтверждено:** real OpenML download/smoke/full и upstream numerical reproduction. **Нет:** реальных benchmark outputs, достаточного meta-dataset, trained/exported recommender, clinical transfer, uncertainty/ablation results, final figures/report/slides. `clinical.py`/`reporting.py` и два scripts — placeholders; registry/openml_loader отдельные модули docstring-only, работающий loader находится в datasets.py.
 
-P0 fixes до expensive runs: result admission mixed smoke/full и fake full; explicit feature allowlist и clinical fence; split_strategy gate и source-level leakage policy; meaningful preprocessing/failure tests. Provenance/recovery добавить до expanded runs. Никакой subjective «проект готов на72%»: software base существенная, empirical research пока на подготовительном этапе, финальная сдача не собрана.
+P0 fixes до expensive runs: result admission mixed smoke/full и fake full; explicit feature allowlist и clinical fence; split_strategy gate и source-level leakage policy; meaningful runner failure tests. Synthetic preprocessing checks выполнены в P033-004. Provenance/recovery добавить до expanded runs. Никакой subjective «проект готов на72%»: software base существенная, empirical research пока на подготовительном этапе, финальная сдача не собрана.
 
 **OFFICIAL:** отдельной university specification/rubric в репозитории нет. ID/title/contributors/objective получены из задания пользователя; deadline, grading weights, mandatory dataset count/report length неизвестны. **REPOSITORY DECISION:** binary HistGBDT vs MLP, BA,3 repeated outer holdouts,3 inner folds,20 candidates и margin.01. **RESEARCH RECOMMENDATION:** strict validation, uncertainty, compact features, Tier B20–30 general datasets/3–5 clinical cohorts. **OPTIONAL:** broader architectures, GUI/API service, landmarking, extensive upstream reproduction. Scope может уменьшаться по ресурсам, но scientific validity не optional.
 
@@ -88,7 +96,7 @@ src/model_recommender/           [существует; не переустра�
 scripts/                         existing entry scripts reused, placeholders completed
 schemas/                         existing3 schemas tightened/versioned
 tests/                           existing tests expanded; new tests only for new contracts
-  test_preprocessing.py           planned PH3
+  test_preprocessing.py           54 synthetic checks, P033-004
   test_model_families.py          planned PH3
   test_cli.py                     planned PH3/14
   test_statistics.py              planned PH13
@@ -281,4 +289,4 @@ Full compute0.1:5 datasets1830 fits;20=7320;30=10980;60=21960. При hypothetic
 
 Завершение означает: (1) принят scope/прояснены unknown official requirements; (2) licensed/versioned/audited registry и source/family/split evidence; (3) real complete paired benchmarks в frozen protocols; (4) valid meta-table с source provenance, без clinical/feature leakage; (5) held-out family comparisons со всеми baselines и raw regret/uncertainty; (6) trained/exported general-only recommender с tested labelled inference/fallback; (7) independent clinical zero-shot results/limitations; (8) RQ1–3 answers включают negative/inconclusive findings; (9) final figures/report/presentation/demo sourced from saved artifacts; (10) independent clean-clone test и completed traceability/submission checklist без unresolvedP0. Необязательная победа рекомендателя, универсальный family-level вывод и полное воспроизведение всех upstream experiments в это определение не входят.
 
-P033-001 завершена в пределах documentation baseline; P033-002 завершена в environment/CI scope с [evidence](reproducibility.md#portable-locked-setup-p033-002); P033-003 source review завершён с [ограничениями admission](data_dictionary.md#family-and-admission-conclusions). Следующий шаг — **P033-004 (READY, не начата)** из [backlog](TASK_BACKLOG.md). Открытые внешние Q01/Q02/Q06/Q08/Q09/Q11 и будущие research checks не блокируют её synthetic preprocessing verification. P033-023 остаётся DECISION и должна зарегистрировать полный evaluation manifest до P033-018/final results; выбор Ridge/LOGO в baseline не означает её completion. Dataset downloads и experiments — последующие задачи после соответствующих gates.
+P033-001 завершена в пределах documentation baseline; P033-002 завершена в environment/CI scope с [evidence](reproducibility.md#portable-locked-setup-p033-002); P033-003 source review завершён с [ограничениями admission](data_dictionary.md#family-and-admission-conclusions); P033-004 завершена в [synthetic preprocessing scope](TASK_BACKLOG.md#p033-004--preprocessor-edgeleakage-verification). Следующий шаг — **P033-005 (READY, не начата)** из [backlog](TASK_BACKLOG.md). Открытые внешние Q01/Q02/Q06/Q08/Q09/Q11 и будущие research checks не блокируют её synthetic protocol/candidate verification. P033-023 остаётся DECISION и должна зарегистрировать полный evaluation manifest до P033-018/final results; выбор Ridge/LOGO в baseline не означает её completion. Dataset downloads и experiments — последующие задачи после соответствующих gates.

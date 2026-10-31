@@ -1,5 +1,139 @@
 # Research Log
 
+## 2026-10-31 — P033-004 Preprocessor edge/leakage verification
+
+Выполнена только [P033-004](TASK_BACKLOG.md#p033-004--preprocessor-edgeleakage-verification):
+T03 и preprocessing subset T04/T08/T09, FR-008/009 и train-only fitting subset
+FR-010; NFR-003/007/009/013/018/020 в пределах приведённых checks. Это не полное
+закрытие FR-010 (split identity/source semantics) или NFR-009 (measured host RSS).
+Initial `main` clean, fetch подтвердил `main=origin/main=f286463`; применимых
+AGENTS.md не найдено. Работа непосредственно в main, explicit file staging,
+небольшие commits/push разрешены пользовательским handoff; branches/PR/force/
+amend/reset не использовались. Дата — Asia/Qyzylorda; active time не измерялось.
+
+**Navigation/baseline.** graphify skill/README/query использованы отдельно от
+project environment. Initial query `DensePreprocessor preprocessing imputer scaler`
+дал93 nodes с budget1800 truncation. Повторная exact-vocabulary проверка обнаружила,
+что `imputer` отсутствует как отдельный token; исправленный query:
+`graphify query 'dense preprocessing scaler numeric' --budget 1800`, все четыре
+tokens присутствуют в graph vocabulary. Snapshot492 nodes на `b316b5d` — только
+navigation, не current evidence. Выводы сверены с preprocessing.py, runner.py и model_families.py,
+актуальными tests/docs/protocol/decisions/requirements/CI/lock. Graph snapshot не
+обновлялся; созданный query cache stamp удалён. Исторический audit35 tests и
+P033-002/003 baseline38 не выданы за новые preprocessing checks. Новая проверка
+до edits: **38 passed / 11.40s**, locked offline. Project Python3.14.7, uv0.12.18,
+numpy2.5.3, pandas3.0.6, sklearn1.9.1, pytest9.1.1, Ruff0.16.8 сохранены.
+
+**Failing regressions → минимальные fixes → green (красные commits не публиковались):**
+
+- Initial roles/missingness run: **10 failed / 21 passed**. Object `None` кодировался
+  как `c_None` вместо missing token; `pd.NA` в object/string давал ambiguous-NA
+  exception; полностью пустая categorical Series с dtype category передавалась
+  sklearn как float64 и отвергала string fill; bool/nullable boolean не проходили
+  imputer. `_categorical_frame` приводит categorical block к object, все pandas
+  missing representations к `np.nan`, bool values к строкам для совместимости
+  с `__missing__` в OHE. Numeric/categorical roles не менялись: bool categorical.
+  Object/str/string/category × None/nan/pd.NA cases сохранены с exact assertions.
+  После fix focused+existing runner **32 passed / 10.30s**.
+- Train-only block: **36 passed / 9.81s** вместе с runner. Manual fixture numeric
+  `[0, NA, 6]` имеет median3, imputed variance6; indicator mean1/3, variance2/9;
+  constant numeric7 имеет scale1. Проверены imputer statistics, encoder categories,
+  scaler mean/var/scale/n_samples, concrete train/scoring values; validation/test
+  sentinels не вызывают fit и не меняют параметры. Spies проверяют exact imputer
+  fit indices и encoder/scaler inputs. При DNN scaler получает numeric+indicators,
+  OHE остаётся 0/1. Отдельный caller test обеих families сравнивает все raw
+  inner-training/outer-refit frames с partitions; DummyClassifier заменяет только
+  estimator, preprocessing/splits настоящие. Existing synthetic runner test сохранён.
+- Direct default guard regression до fix: **DID NOT RAISE MatrixTooLargeError**,
+  OHE вызван. Использована искусственная fitted width с одной scoring row без
+  большой matrix. Ещё четыре red cases показывали отсутствие keyword limit у
+  direct transform; checked fit/scoring guard cases уже были green. Теперь guard
+  внутри `DensePreprocessor.transform`, keyword `limit_bytes` default536870912;
+  wrappers передают тот же custom limit, fit wrapper сохраняет pre-scaler check.
+  Limit per call: custom wrapper limit не становится новым default прямого метода.
+- Schema/refit probe: **3 failed / 13 passed**. Дубликаты extra columns молча
+  игнорировались на fit/transform; failed checked refit оставлял `_ready=True`.
+  Early uniqueness validation и `_ready=False` перед structure refit устранили
+  эти воспроизводимые нарушения. Duplicate numeric/categorical/extra columns и
+  missing required columns теперь покрыты вместе с readiness regression.
+- Guard fixtures: training width5 = 1 numeric +1 indicator +3 OHE, matrix120 B.
+  Limit120 допускается; limit112 отклоняет превышение на8 B до numeric-imputer
+  output/scaler fit/scaler transform/OHE/hstack (monkeypatch spies). Проверены
+  fit_transform_checked, transform_checked и direct transform при scaling False/True,
+  unknown-only scoring fixed width, actual output nbytes, custom limit forwarding
+  ниже/выше default, integer estimate без overflow и default512MiB=536870912 B.
+  Large inputs/outputs не создавались. После fixes focused+runner **55 passed / 10.51s**.
+
+**Compatibility/границы.** Scientific settings, median/indicator/OHE/scaling
+contract, role inference, default matrix limit, frozen0.1, candidate configs,
+registry/source pins, Python/pyproject/uv.lock сохранены. Корректные ранее
+поддержанные fixtures дают прежние значения; ранее ошибочные/неверно imputing
+NA/bool inputs могут дать другой encoded output. Старые artifacts не становятся
+valid автоматически: reuse требует downstream provenance/admission checks.
+`transform(X)` теперь защищён default guard; callers с custom limit используют
+checked wrappers или `transform(X, limit_bytes=...)`. Direct transform после
+failed refit отклоняется до allocations. Это per-output-matrix bound: categorical
+original-width object intermediate нужен уже для fit_structure; imputation,
+scaling copies, concatenation и coexistence train/scoring arrays могут увеличить
+RSS. Peak RSS/host budget не измерены. Unit tests не доказывают отсутствие
+semantic target leakage, shared entities/cohorts или symmetry leakage.
+
+**Финальные локальные команды/results (workspace workaround):**
+
+```powershell
+$env:UV_CACHE_DIR = Join-Path (Get-Location) 'artifacts/uv_cache'
+$env:TEMP = Join-Path (Get-Location) 'artifacts/p033004/temp'
+$env:TMP = $env:TEMP
+New-Item -ItemType Directory -Force -Path $env:TEMP,'artifacts/p033004/tests' | Out-Null
+uv run --locked --offline pytest -q tests/test_preprocessing.py --basetemp=artifacts/p033004/tests/focused-final --tb=short
+uv run --locked --offline pytest -q tests/test_runner.py --basetemp=artifacts/p033004/tests/runner-final --tb=short
+uv run --locked --offline pytest -q --basetemp=artifacts/p033004/tests/full --tb=short
+uv run --locked --offline ruff check .
+uv run --locked --offline ruff format --check .
+uv lock --check --offline
+git diff --check
+```
+
+Actual: **54 focused passed / 7.32s**, **1 runner passed / 9.80s**,
+**92 full-suite passed / 12.84s**. Full92 = previous38 +54 new preprocessing cases;
+counts не являются coverage percentage. Ruff all checks passed, format66 files
+already formatted, lock19 packages resolved, exits0. Basetemp parent создан
+заранее; existing environment сохранена, dependency installs/upgrades не нужны.
+T09 static/self-review: affected Markdown links/anchors, table widths, task/requirement
+identifiers и whitespace checks проходят; changes только source/test и status/evidence
+docs. Independent human peer review не заявлен.
+
+**Небольшие commits/push и actual hosted CI:**
+
+- `525ea50` — `fix(preprocessing): normalize categorical missingness and bool inputs`:
+  first roles/missingness regressions и minimal normalization fix.
+  [CI 41183953569](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41183953569)
+  success, Windows/Ubuntu jobs и install/lock/lint/format/оба offline tests steps.
+- `3262826` — `test(preprocessing): verify train-only imputation and scaling`:
+  exact fitted/scoring values, fit spies, runner partitions обеих families.
+  [CI 41184062580](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41184062580)
+  success, обе OS и все обязательные steps.
+- `adbb478` — `fix(preprocessing): enforce checked dense allocation contract`:
+  boundaries/direct guard/custom limits, duplicate validation, refit readiness.
+  [CI 41184297674](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41184297674)
+  success. Actual logs: Ubuntu **92 passed / 5.89s / 2.86s**, Windows
+  **92 passed / 8.95s / 3.92s**; lock/lint/format green, fresh hosted installs.
+- Завершающий `docs(plan): record P033-004 validation and remaining gates`:
+  backlog/research log, current master navigation и T03 row согласованы.
+  Его hash/CI берутся из Git history/итогового handoff, будущий hash не выдуман
+  внутри commit. Перед каждым commit/push branch main проверена, diffs и staged
+  diff просмотрены, explicit files staged; push origin main success для блоков выше.
+  Все CI failures отсутствуют, blind reruns не делались.
+
+**Результат:** P033-004 DONE в synthetic preprocessing acceptance scope.
+P033-005 READY по dependency004, не начата; P033-023 остаётся DECISION. G1,
+source-specific benchmark readiness и remaining requirements не объявлены DONE.
+P033-003 source admission не заменяет P033-008/009: tic-tac-toe primary eligibility
+pending symmetry review; Spambase missingness disagreement и остальные source
+limitations сохранены. Source dedup/group/symmetry implementation не выполнялась;
+datasets не скачивались, реальные smoke/full/benchmarks/upstream не запускались.
+Decision ledger и historical audit сохранены; общий research package ещё не готов.
+
 ## 2026-10-31 — P033-003 Five pilot source cards
 
 Выполнена только [P033-003](TASK_BACKLOG.md#p033-003--пять-pilot-source-cards):
