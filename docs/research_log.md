@@ -1,5 +1,140 @@
 # Research Log
 
+## 2026-10-31 — P033-003 Five pilot source cards
+
+Выполнена только [P033-003](TASK_BACKLOG.md#p033-003--пять-pilot-source-cards):
+metadata/source/admission review пяти pilots, T01/T09 в пределах этой карточки.
+Initial `main` clean, `git fetch origin` подтвердил `main=origin/main=59eafd8`;
+применимых AGENTS.md в ancestors/рабочем дереве не найдено. Работа/небольшие
+commits/push непосредственно в main по явному поручению пользователя; branches,
+PR, force/amend/reset не использовались, чужих изменений не было. Дата доступа —
+2026-10-31, Asia/Qyzylorda; active time отдельно не измерялось, ML compute0.
+
+**Навигация и чтение.** Прочитаны master/audit/backlog/common DoD, requirements,
+T01/T09/test gates, decisions (особенно D012/D017/D019), risks, dictionary,
+clinical policy, reproducibility, registry, actual DatasetSpec/read_registry/
+load_dataset, existing mocked registry/loader tests и CI. Graphify отдельно от
+locked project env: system Python3.12, `reflect --if-stale`, vocabulary expansion
+`source admission registry family duplicate license`, BFS query `--budget 2500`.
+Снимок `b316b5d`: 492 nodes, 885 links; budget вернул 63 из 89 найденных nodes,
+поэтому вывод использован только как карта файлов. Current datasets.py/tests и
+primary sources проверены отдельно; placeholder registry.py/openml_loader.py и
+roadmap nodes не выданы за implementation. Query feedback/navigation bookkeeping
+сохранены под ignored `artifacts/p033003`; опубликованный graph snapshot не обновлялся.
+
+**Новые evidence, не повторение исторического аудита.**
+
+- [Dictionary](data_dictionary.md) содержит пять cards: source ID/version/MD5,
+  dimensions/target/labels/positive mapping, feature roles, author/citation,
+  prediction-time/ID/post-outcome/entity/version/family review, permissions,
+  duplicate policy и unresolved gates. Полные списки schema names и selected
+  metadata fields — [dated JSON snapshot](sources/pilot_metadata_2026-10-31.json),
+  единственный supporting source artifact; это не raw data и не полный API dump.
+- Прочитаны 15 OpenML JSON endpoints: `/api/v1/json/data/{31,59,44,1590,50}`,
+  `/data/features/{id}`, `/data/qualities/{id}`; все direct URLs в cards/snapshot.
+  Временный comparison script проверил каждое identity field, exact label/role
+  sets, expected rows/column counts, numeric/symbolic counts (с target), все
+  `is_ignore/is_row_identifier=false`, сумму per-feature missingness; все MATCH.
+  Positive encoding сопоставлено с текущим loader/registry и source semantics.
+  MD5 только сравнен с published metadata: скачанных bytes для hashing нет.
+- Все пять modern UCI dataset pages (144/52/94/2/101) прочитаны, включая
+  source-specific License/Citation/Creators; original german.doc,
+  ionosphere.names, spambase.names и spambase.DOCUMENTATION, adult.names,
+  tic-tac-toe.names; CC BY 4.0 deed и legal code. Access date/sections/direct
+  URLs/citations записаны в dictionary. DOI values взяты из UCI citation
+  sections; referenced method papers/DOI content отдельно не исследовались.
+- `Public` — прежнее catalogue field, не permissions proof. Каждый UCI source
+  page явно указывает CC BY 4.0; research reuse имеет source evidence,
+  redistribution/adaptation сохраняют attribution/license/change/notice
+  conditions. Это не certification всех иных прав и не publication clearance
+  будущих artifacts. Registry `license`, verified_on, legacy URLs и pins
+  сохранены, новых неподдерживаемых loader fields нет; source identity и
+  совместимость старых outputs не менялись и не объявлялись validated заново.
+
+**Admission outcome.** Credit-g source-admitted для static risk classification,
+ionosphere — processed radar returns, spambase — historical email corpus,
+adult — retrospective income classification, tic-tac-toe — endgame recognition.
+Это source-level решения, не готовность к benchmark/result admission. Для
+credit-g неизвестны точный outcome horizon/measurement time/повторные borrowers;
+ionosphere — session/entity/label provenance; spambase — personal/domain shortcuts
+и missingness disagreement между UCI web summary и original/OpenML metadata;
+adult — historical duplicate/conflicting warning (не новый count), household
+dependence и contemporaneous features/weight. Tic-tac-toe label определяется
+конечной доской, не future winner; **primary eligibility PENDING symmetry review
+P033-008/009**. У всех actual duplicates/conflicts/local integrity не проверялись.
+
+Source-specific lineage groups и no-silent-dedup D019 записаны; group/dedup/
+row/predictor/split corrections требуют отдельной identity и совместимых runs,
+не тихого изменения frozen0.1. Metadata row-ID flags не доказывают independence.
+Новых clinical sources нет; D012 fence остаётся обязательным, D017 needs
+confirmation, P033-023 **DECISION** (manifest этим review не создан).
+
+**Access failures и разрешение.** Initial OpenML web tool timeout/access failure,
+sandbox DNS и `.git/FETCH_HEAD` write denial разрешены permitted direct HTTPS /
+Git execution. У guessed static german.doc URL и web tic-tac-toe.names был
+failure; original german.doc URL и direct HTTPS tic-tac-toe.names успешно
+прочитаны. Нет нерешённого access blocker для использованных источников; нет
+подмены source/pin/permission или заявления pass по failed request. Ограничения
+timing/session/household evidence остались unknown в cards.
+
+**Проверки (Windows PowerShell, exit0):** перед командами создан parent
+`artifacts/p033003/tests`; workspace `UV_CACHE_DIR=artifacts/uv_cache`,
+`TEMP/TMP=artifacts/p033003/temp` по reproducibility guide.
+
+```text
+uv run --locked --offline p033 datasets --output artifacts/p033003/registry.json
+uv run --locked --offline pytest -q tests/test_datasets.py --basetemp=artifacts/p033003/tests/registry --tb=short
+uv run --locked --offline p033 datasets --output artifacts/p033003/registry-final.json
+uv lock --check --offline
+uv run --locked --offline ruff check .
+uv run --locked --offline ruff format --check .
+uv run --locked --offline pytest -q --basetemp=artifacts/p033003/tests/final --tb=short
+```
+
+Registry/loader tests: **21 passed / 5.53s**; full locked socket-blocked suite:
+**38 passed / 10.96s**. Ruff all checks passed, format 66 files unchanged,
+lock19 resolved packages. Dataset registry CLI offline, not OpenML fetch.
+No new tests/code/dependencies for documentation-only changes. T09 static
+self-review: links/anchors/table widths/task+requirement IDs resolve, per-card
+citations checked against actually read sources, diff/staged whitespace checks
+passed. Scope traceability: FR-001/002 metadata subset, FR-003/NFR-016 permission
+evidence, FR-004/006/007 source policy, NFR-001/011/020/021 and SR-002/003 boundaries.
+Это не complete T01/T09/70-requirement acceptance и не independent human review.
+
+**Небольшие commits и реальный CI:**
+
+- `47b18f4` — `docs(data): document credit-g and ionosphere source evidence`:
+  первая пара cards, review/permissions contract и selected-field metadata.
+  После checks/staged review push origin main success.
+  [CI 41183011946](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41183011946):
+  Windows/Ubuntu jobs и install/lock/lint/format/оба offline suite steps success.
+- `59b83d1` — `docs(data): review remaining pilot source admission`: остальные
+  три cards, snapshot, family/admission/access conclusions. После metadata/docs/
+  full suite/quality checks и staged review push origin main success.
+  [CI 41183236859](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41183236859):
+  Windows/Ubuntu jobs и install/lock/lint/format/оба offline suite steps success.
+- Финальный `docs(plan): record P033-003 validation and source limits`:
+  backlog acceptance/status и эта запись; master status/navigation исправлены,
+  поскольку иначе main entry point ошибочно называл завершённую P033-003 READY.
+  Hash и последний CI run — в Git history/итоговом handoff; будущий hash/status
+  не выдумываются внутри самого commit. Decisions не менялись.
+
+**Common DoD/result.** Пять доказательных source cards существуют, current
+metadata и разрешения для заявленных задач сверены, lineage/time/role/duplicate
+unknowns явно переданы соответствующим downstream gates; acceptance карточки
+выполнен. Перед каждым commit diff/checks, explicit file staging, staged review/
+check; main проверен перед commit и push. Changes ограничены dictionary,
+supporting metadata snapshot, backlog/research log и необходимыми master status
+updates. Frozen protocol/alias, configs, ML, Python/dependencies/lock сохранены.
+Datasets/benchmarks/smoke/full/upstream не запускались; output scores отсутствуют.
+
+**P033-003 DONE только в metadata/source-review scope; P033-004 READY, не начата.**
+Pending: data audit и actual source-specific benchmark admission P033-008/009,
+в том числе tic-tac-toe symmetry, expanded family/manifest P033-014/015/023,
+publication notices P033-032/Q10 и внешние unknowns предыдущего ledger.
+Они не блокируют synthetic preprocessing verification P033-004. G1/PH0/M0/
+финальный research package этим review не закрыты; P033-023 остаётся DECISION.
+
 ## 2026-09-24 — Benchmark implementation milestone
 
 Implemented the next engineering stage of CSCI447P033:

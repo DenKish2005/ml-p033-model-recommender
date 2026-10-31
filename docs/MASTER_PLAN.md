@@ -4,6 +4,15 @@
 
 Выполнены **аудит, планирование, P033-001 — scope/research decisions baseline и P033-002 — environment/CI portability** (2026-10-30). Основной ML-код, frozen protocol, Python/dependencies и experiment results не изменялись. Benchmarks и скачивание datasets в этих задачах не выполнялись. Все будущие research artifacts ниже — цели, не уже полученные результаты.
 
+**Обновление 2026-10-31:** P033-003 DONE в metadata/source-review scope:
+[пять source cards и evidence](data_dictionary.md), [acceptance](TASK_BACKLOG.md#p033-003--пять-pilot-source-cards),
+[research log](research_log.md#2026-10-31--p033-003-five-pilot-source-cards).
+Registry pins и scientific implementation сохранены; dataset downloads/benchmarks
+не выполнялись. Source admission ограничен указанными задачами; data integrity,
+duplicate/entity checks и tic-tac-toe symmetry policy остаются gates P033-008/009.
+Следующая P033-004 READY, не начата; P033-023 DECISION. Ниже roadmap и audit baseline
+описывают цели, а не подтверждают downstream implementation.
+
 ## 1. Как пользоваться комплектом
 
 1. [PROJECT_AUDIT.md](PROJECT_AUDIT.md): факты о текущем коде,35 passing tests, ограничения и evidence.
@@ -108,7 +117,7 @@ notebooks/                       existing5 scaffold notebooks optional analysis 
 ### PHASE 0 — Project Audit and Requirements Freeze
 
 - **Цель/P:** доказательный baseline и проверяемый scope, P0. **Предусловия/зависимости:** current repository/user brief; official rubric если доступна. **Уже:** текущий аудит и этот planning pack; tests/CI baseline.
-- **Выполнено P033-001:** identity/RQ/code scope сопоставлены, Tier B — рабочая цель с resource/source assumptions, official unknowns и D011–D020 dispositions записаны; documentation acceptance проверена в [backlog](TASK_BACKLOG.md#p033-001--scope-и-research-decisions) и [research log](research_log.md#2026-10-30--p033-001-scope-and-research-decisions). **Остаётся PH0:** P033-003 source cards, P033-023 prospective evaluation manifest по D013/D014/D018 и source/feature policy; reviewer из студентов ещё не назначен. P033-001 не закрывает всю PH0/M0 и не подтверждает downstream gates.
+- **Выполнено P033-001:** identity/RQ/code scope сопоставлены, Tier B — рабочая цель с resource/source assumptions, official unknowns и D011–D020 dispositions записаны; documentation acceptance проверена в [backlog](TASK_BACKLOG.md#p033-001--scope-и-research-decisions) и [research log](research_log.md#2026-10-30--p033-001-scope-and-research-decisions). P033-003 source cards review завершён 2026-10-31 с explicit downstream unknowns. **Остаётся PH0:** P033-023 prospective evaluation manifest по D013/D014/D018 и source/feature policy; reviewer из студентов ещё не назначен. PH0/M0 целиком не закрыты, downstream gates не подтверждены.
 - **Существующие files:** docs/decisions.md, configs/project.toml, protocol; **новые:** university source reference только если получен реальный документ, не пустая rubric. **Functions/classes:** не нужны; decisions records input→dated acceptance.
 - **Inputs/outputs:** задания/аудит→scope decision, unknown ledger, frozen protocol/meta-selection hashes. **Команды:** `git diff -- docs/decisions.md configs/project.toml`; **тесты/проверка:** T09, category/source/crosslink review.
 - **Труд/compute:**2–4h scope +2–4h early evaluation freeze, без ML compute. **Риски:** inventing official constraints, outcome-based redesign. **DoD:** G0; scientific unit/primary model/metric/source rules зафиксированы, unknown rubric честно отмечена.
@@ -237,7 +246,7 @@ notebooks/                       existing5 scaffold notebooks optional analysis 
 
 | Milestone | Проверяемый outcome / gate | Зависит от |
 |---|---|---|
-| M0 | requirements/source categories/protocol decisions frozen, G0; сейчас P033-001 scope/categories/dispositions DONE, source cards и prospective P033-023 freeze ещё открыты, весь milestone не закрыт | PH0/1 |
+| M0 | requirements/source categories/protocol decisions frozen, G0; P033-001 baseline и P033-003 source review DONE, prospective P033-023 freeze ещё открыт, весь milestone не закрыт | PH0/1 |
 | M1 |5 real smoke outcomes, all development-only, engineering findings resolved | PH3/4 |
 | M2 |first complete canonical full + measured host budget, G2 | M1 + provenance |
 | M3 |admitted independent corpus + all attempted full runs/exclusion ledger + validated meta-table, G3 | M2 + PH5/6/7/8 + early eval freeze |
@@ -272,4 +281,4 @@ Full compute0.1:5 datasets1830 fits;20=7320;30=10980;60=21960. При hypothetic
 
 Завершение означает: (1) принят scope/прояснены unknown official requirements; (2) licensed/versioned/audited registry и source/family/split evidence; (3) real complete paired benchmarks в frozen protocols; (4) valid meta-table с source provenance, без clinical/feature leakage; (5) held-out family comparisons со всеми baselines и raw regret/uncertainty; (6) trained/exported general-only recommender с tested labelled inference/fallback; (7) independent clinical zero-shot results/limitations; (8) RQ1–3 answers включают negative/inconclusive findings; (9) final figures/report/presentation/demo sourced from saved artifacts; (10) independent clean-clone test и completed traceability/submission checklist без unresolvedP0. Необязательная победа рекомендателя, универсальный family-level вывод и полное воспроизведение всех upstream experiments в это определение не входят.
 
-P033-001 завершена в пределах documentation baseline; P033-002 завершена в environment/CI scope с [evidence](reproducibility.md#portable-locked-setup-p033-002). Следующий шаг — **P033-003 (READY)** из [backlog](TASK_BACKLOG.md); source cards в этом задании не выполнялись. Открытые внешние Q01/Q02/Q06/Q08/Q09/Q11 и будущие research checks не блокируют source review. P033-023 остаётся DECISION и должна зарегистрировать полный evaluation manifest до P033-018/final results; выбор Ridge/LOGO в baseline не означает её completion. ML changes, datasets и experiments — последующие задачи после соответствующих gates.
+P033-001 завершена в пределах documentation baseline; P033-002 завершена в environment/CI scope с [evidence](reproducibility.md#portable-locked-setup-p033-002); P033-003 source review завершён с [ограничениями admission](data_dictionary.md#family-and-admission-conclusions). Следующий шаг — **P033-004 (READY, не начата)** из [backlog](TASK_BACKLOG.md). Открытые внешние Q01/Q02/Q06/Q08/Q09/Q11 и будущие research checks не блокируют её synthetic preprocessing verification. P033-023 остаётся DECISION и должна зарегистрировать полный evaluation manifest до P033-018/final results; выбор Ridge/LOGO в baseline не означает её completion. Dataset downloads и experiments — последующие задачи после соответствующих gates.
