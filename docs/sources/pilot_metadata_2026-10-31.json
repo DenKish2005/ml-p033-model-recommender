@@ -131,6 +131,202 @@
         "NumberOfSymbolicFeatures": "1.0"
       },
       "registry_comparison": "MATCH: identity, target, label set, role sets, dimensions, flags; local data bytes NOT checked"
+    },
+    {
+      "description_url": "https://www.openml.org/api/v1/json/data/44",
+      "features_url": "https://www.openml.org/api/v1/json/data/features/44",
+      "qualities_url": "https://www.openml.org/api/v1/json/data/qualities/44",
+      "description_fields": {
+        "id": "44",
+        "name": "spambase",
+        "version": "1",
+        "description_version": "3",
+        "md5_checksum": "d9ace01aeac3461e326a8e1b2d53fd84",
+        "default_target_attribute": "class",
+        "licence": "Public",
+        "visibility": "public",
+        "status": "active",
+        "original_data_url": "https://archive.ics.uci.edu/ml/datasets/spambase"
+      },
+      "target_labels": [
+        "0",
+        "1"
+      ],
+      "numeric_predictors": [
+        "word_freq_make",
+        "word_freq_address",
+        "word_freq_all",
+        "word_freq_3d",
+        "word_freq_our",
+        "word_freq_over",
+        "word_freq_remove",
+        "word_freq_internet",
+        "word_freq_order",
+        "word_freq_mail",
+        "word_freq_receive",
+        "word_freq_will",
+        "word_freq_people",
+        "word_freq_report",
+        "word_freq_addresses",
+        "word_freq_free",
+        "word_freq_business",
+        "word_freq_email",
+        "word_freq_you",
+        "word_freq_credit",
+        "word_freq_your",
+        "word_freq_font",
+        "word_freq_000",
+        "word_freq_money",
+        "word_freq_hp",
+        "word_freq_hpl",
+        "word_freq_george",
+        "word_freq_650",
+        "word_freq_lab",
+        "word_freq_labs",
+        "word_freq_telnet",
+        "word_freq_857",
+        "word_freq_data",
+        "word_freq_415",
+        "word_freq_85",
+        "word_freq_technology",
+        "word_freq_1999",
+        "word_freq_parts",
+        "word_freq_pm",
+        "word_freq_direct",
+        "word_freq_cs",
+        "word_freq_meeting",
+        "word_freq_original",
+        "word_freq_project",
+        "word_freq_re",
+        "word_freq_edu",
+        "word_freq_table",
+        "word_freq_conference",
+        "char_freq_%3B",
+        "char_freq_%28",
+        "char_freq_%5B",
+        "char_freq_%21",
+        "char_freq_%24",
+        "char_freq_%23",
+        "capital_run_length_average",
+        "capital_run_length_longest",
+        "capital_run_length_total"
+      ],
+      "categorical_predictors": [],
+      "row_identifier_features": [],
+      "ignored_features": [],
+      "missing_values_by_feature": {},
+      "qualities": {
+        "NumberOfClasses": "2.0",
+        "NumberOfFeatures": "58.0",
+        "NumberOfInstances": "4601.0",
+        "NumberOfInstancesWithMissingValues": "0.0",
+        "NumberOfMissingValues": "0.0",
+        "NumberOfNumericFeatures": "57.0",
+        "NumberOfSymbolicFeatures": "1.0"
+      },
+      "registry_comparison": "MATCH: identity, target, label set, role sets, dimensions, flags; local data bytes NOT checked"
+    },
+    {
+      "description_url": "https://www.openml.org/api/v1/json/data/1590",
+      "features_url": "https://www.openml.org/api/v1/json/data/features/1590",
+      "qualities_url": "https://www.openml.org/api/v1/json/data/qualities/1590",
+      "description_fields": {
+        "id": "1590",
+        "name": "adult",
+        "version": "2",
+        "description_version": "18",
+        "md5_checksum": "bb6510925e5d4b23d136715febb2cdf5",
+        "default_target_attribute": "class",
+        "licence": "Public",
+        "visibility": "public",
+        "status": "active",
+        "original_data_url": "https://archive.ics.uci.edu/ml/datasets/adult"
+      },
+      "target_labels": [
+        "<=50K",
+        ">50K"
+      ],
+      "numeric_predictors": [
+        "age",
+        "fnlwgt",
+        "education-num",
+        "capital-gain",
+        "capital-loss",
+        "hours-per-week"
+      ],
+      "categorical_predictors": [
+        "workclass",
+        "education",
+        "marital-status",
+        "occupation",
+        "relationship",
+        "race",
+        "sex",
+        "native-country"
+      ],
+      "row_identifier_features": [],
+      "ignored_features": [],
+      "missing_values_by_feature": {
+        "workclass": 2799,
+        "occupation": 2809,
+        "native-country": 857
+      },
+      "qualities": {
+        "NumberOfClasses": "2.0",
+        "NumberOfFeatures": "15.0",
+        "NumberOfInstances": "48842.0",
+        "NumberOfInstancesWithMissingValues": "3620.0",
+        "NumberOfMissingValues": "6465.0",
+        "NumberOfNumericFeatures": "6.0",
+        "NumberOfSymbolicFeatures": "9.0"
+      },
+      "registry_comparison": "MATCH: identity, target, label set, role sets, dimensions, flags; local data bytes NOT checked"
+    },
+    {
+      "description_url": "https://www.openml.org/api/v1/json/data/50",
+      "features_url": "https://www.openml.org/api/v1/json/data/features/50",
+      "qualities_url": "https://www.openml.org/api/v1/json/data/qualities/50",
+      "description_fields": {
+        "id": "50",
+        "name": "tic-tac-toe",
+        "version": "1",
+        "description_version": "1",
+        "md5_checksum": "34b2992c41e5e23c42769817e96305ac",
+        "default_target_attribute": "Class",
+        "licence": "Public",
+        "visibility": "public",
+        "status": "active",
+        "original_data_url": "https://archive.ics.uci.edu/ml/datasets/Tic-Tac-Toe+Endgame"
+      },
+      "target_labels": [
+        "negative",
+        "positive"
+      ],
+      "numeric_predictors": [],
+      "categorical_predictors": [
+        "top-left-square",
+        "top-middle-square",
+        "top-right-square",
+        "middle-left-square",
+        "middle-middle-square",
+        "middle-right-square",
+        "bottom-left-square",
+        "bottom-middle-square",
+        "bottom-right-square"
+      ],
+      "row_identifier_features": [],
+      "ignored_features": [],
+      "missing_values_by_feature": {},
+      "qualities": {
+        "NumberOfClasses": "2.0",
+        "NumberOfFeatures": "10.0",
+        "NumberOfInstances": "958.0",
+        "NumberOfInstancesWithMissingValues": "0.0",
+        "NumberOfMissingValues": "0.0",
+        "NumberOfNumericFeatures": "0.0",
+        "NumberOfSymbolicFeatures": "10.0"
+      },
+      "registry_comparison": "MATCH: identity, target, label set, role sets, dimensions, flags; local data bytes NOT checked"
     }
   ]
 }
