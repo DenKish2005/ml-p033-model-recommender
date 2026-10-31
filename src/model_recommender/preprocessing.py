@@ -60,6 +60,19 @@ class DensePreprocessor:
         if missing:
             raise ValueError(f"Missing preprocessing columns: {sorted(missing)}")
 
+    def _categorical_frame(self, X: pd.DataFrame) -> pd.DataFrame:
+        """Give sklearn object columns with a single missing-value representation."""
+        categorical = X.loc[:, self.roles.categorical].astype(object)
+        # Bool is categorical under infer_feature_roles. String values allow its
+        # categories to coexist with the string missing token in OneHotEncoder.
+        for column in self.roles.categorical:
+            categorical[column] = (
+                categorical[column]
+                .map(lambda value: str(value) if isinstance(value, (bool, np.bool_)) else value)
+                .astype(object)
+            )
+        return categorical.where(categorical.notna(), np.nan)
+
     def fit_structure(self, X: pd.DataFrame) -> DensePreprocessor:
         """Fit imputers/encoder and determine final width without materialising one-hot output."""
 
@@ -84,7 +97,7 @@ class DensePreprocessor:
                 fill_value="__missing__",
                 keep_empty_features=True,
             )
-            categorical = X.loc[:, self.roles.categorical]
+            categorical = self._categorical_frame(X)
             self.categorical_imputer.fit(categorical)
             # This intermediate object array has only the original categorical width;
             # the potentially huge one-hot float64 matrix is not produced here.
@@ -132,7 +145,7 @@ class DensePreprocessor:
             blocks.append(numeric)
         if self.roles.categorical:
             assert self.categorical_imputer is not None and self.onehot is not None
-            categorical = self.categorical_imputer.transform(X.loc[:, self.roles.categorical])
+            categorical = self.categorical_imputer.transform(self._categorical_frame(X))
             blocks.append(np.asarray(self.onehot.transform(categorical), dtype=np.float64))
         return blocks[0] if len(blocks) == 1 else np.hstack(blocks)
 
