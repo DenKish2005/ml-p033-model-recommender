@@ -8,6 +8,17 @@
       "usage_available": false,
       "files": 65,
       "note": "Host-agent token usage not exposed; AST uses no LLM; no external LLM API called."
+    },
+    {
+      "date": "2026-10-31T08:39:57.027430+00:00",
+      "client_date": "2026-10-31",
+      "source_commit": "b8505f4f0d7945baebe3d9e897b48df09d3268b9",
+      "input_tokens": null,
+      "output_tokens": null,
+      "usage_available": false,
+      "files": 8,
+      "corpus_files": 67,
+      "note": "Incremental update; 3 AST inputs and 5 host-agent semantic documents. Host-agent usage not exposed; no external LLM API called."
     }
   ],
   "total_input_tokens": 0,

@@ -46,8 +46,8 @@
       "complete": true
     },
     "docs/MASTER_PLAN.md": {
-      "reported_lines": 275,
-      "actual_lines": 275,
+      "reported_lines": 292,
+      "actual_lines": 292,
       "complete": true
     },
     "docs/REQUIREMENTS.md": {
@@ -61,13 +61,13 @@
       "complete": true
     },
     "docs/TASK_BACKLOG.md": {
-      "reported_lines": 433,
-      "actual_lines": 433,
+      "reported_lines": 454,
+      "actual_lines": 454,
       "complete": true
     },
     "docs/TEST_AND_ACCEPTANCE_PLAN.md": {
-      "reported_lines": 68,
-      "actual_lines": 68,
+      "reported_lines": 75,
+      "actual_lines": 75,
       "complete": true
     },
     "docs/PROJECT_AUDIT.md": {
@@ -81,8 +81,8 @@
       "complete": true
     },
     "docs/data_dictionary.md": {
-      "reported_lines": 5,
-      "actual_lines": 5,
+      "reported_lines": 353,
+      "actual_lines": 353,
       "complete": true
     },
     "docs/decisions.md": {
@@ -106,16 +106,25 @@
       "complete": true
     },
     "docs/research_log.md": {
-      "reported_lines": 69,
-      "actual_lines": 69,
+      "reported_lines": 338,
+      "actual_lines": 338,
       "complete": true
     }
   },
   "document_count": 22,
-  "code_file_count": 43,
+  "code_file_count": 45,
   "ast_no_symbols": [
+    "docs/sources/pilot_metadata_2026-10-31.json",
     "pyproject.toml",
     "src/model_recommender/__init__.py"
   ],
-  "chunk_02_recovery": "Usage limit interrupted the final text response after complete JSON was saved; agent receipt and root readback validated the saved full result."
+  "chunk_02_recovery": "Usage limit interrupted the final text response after complete JSON was saved; agent receipt and root readback validated the saved full result.",
+  "incremental_update": {
+    "source_commit": "b8505f4f0d7945baebe3d9e897b48df09d3268b9",
+    "changed_files": 8,
+    "changed_documents": 5,
+    "retained_previous_concept_ids": 36,
+    "all_changed_documents_complete": true,
+    "metadata_json_note": "No structural symbols; dictionary nodes cite and describe its evidence."
+  }
 }
