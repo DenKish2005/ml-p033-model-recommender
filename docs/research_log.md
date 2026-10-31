@@ -1,5 +1,146 @@
 # Research Log
 
+## 2026-10-31 — P033-006 Strict result admission
+
+Выполнена только [P033-006](TASK_BACKLOG.md#p033-006--strict-result-admission):
+recorded-result admission subset T05/T06, relevant T04, builder/API subset T08
+и static docs/schema review T09. Traceability: FR-012 canonical artifact checks,
+FR-015 all-required completion evidence, FR-018 admission ledger, FR-019 paired
+aggregation/source-identifier uniqueness, FR-037 builder errors/report и FR-039
+offline regressions; NFR-002 deterministic admission order, NFR-003/004/007/013/018/020
+within this scope. FR-017/NFR-001 full provenance, entire T05/T06/G1 and production
+runner failure-generation semantics are not completed by these rejection tests.
+
+**Historical baseline / navigation.** P033-005 completed at
+`a43cc37b87f6cce1a05468830374b91e7debfc1a`: 41 model/runner,54 preprocessing,
+132 full-suite tests and Windows/Ubuntu CI, as recorded below. These are historical
+evidence, not a new pre-edit 132-test run. Initial main was clean; `git fetch origin`
+and main/origin comparison confirmed that SHA and no divergence. No applicable
+AGENTS.md in ancestors/tree. Small commits and push directly to main were explicitly
+authorized; no branch/worktree/PR, force/amend/reset or changes by others were involved.
+Date is Asia/Qyzylorda; active time was not separately measured.
+
+Graphify skill/README/query guidance read; separate Python3.12 tool environment,
+not locked project env. Actual-vocabulary expansion: `admission benchmark meta
+dataset research protocol candidate aggregate`; query budget1800 returned255 nodes,
+46 shown (truncated), including meta_dataset.py, runner.py, schemas and D011.
+Snapshot564 nodes/1124 links/39 communities remains source b8505f4, before P033-005.
+Conclusions checked against current files/callers/tests/configs and relevant
+audit A01/A04/A07, requirements, plans, protocol, decisions, source dictionary
+and prior log. Snapshot was not rebuilt; generated query/cache material was kept
+out of implementation commits.
+
+**Defects / implemented contracts.**
+
+- Old converter trusted `research_valid`; three initial regressions failed with
+  `DID NOT RAISE`: missing outer evidence, reduced smoke renamed full with spoofed
+  flag, corrupt aggregate gap. The shared [validator](../src/model_recommender/result_validation.py)
+  now requires exact full42/137/2026/.25/inner3/20/tuning42/536870912B/margin.01,
+  project/source metadata types, both models, every canonical sampled parameter
+  and order/baseline, all folds/trials/preprocessing evidence, selected mean-inner-BA
+  candidate and exact ties by order, refit/scoring and nested success/error consistency.
+  JSON arrays equal tuple MLP layers without dropping parameters. Bool is not a
+  count/score/identity; finite/range checks include scores, timings and descriptors.
+- Trial means, paired outer gaps, aggregate BA/gap/winner/near-tie and complete
+  v1 outer-training descriptor means checked with absolute arithmetic tolerance1e-12,
+  relative zero. Signature/params remain exact. Integer counts/IDs are bounded
+  to the interoperable range2**53-1. A further red regression exposed cancellation
+  for train36631/minority3: ratio12209.333333333334 versus fraction-reconstructed
+  12209.333333333332 differs1.8189894035458565e-12. Fix reconstructs/validates integer
+  class counts and uses the runner's count-ratio arithmetic, preserving score tolerance.
+  No results are repaired/recomputed for acceptance; recomputation only verifies
+  recorded values, originals are unchanged.
+- [Selection/builder API](../src/model_recommender/meta_dataset.py) processes all
+  sorted input paths and emits outcome/code/reason per occurrence. Strict JSON
+  rejects malformed/duplicate keys/NaN/Infinity/overflow numbers; unreadable files
+  are explicit rejects. Mixed valid full+genuine smoke+excluded+malformed+spoofed
+  full+unreadable fixture gives exactly1 accepted/5 rejected, with exact identity,
+  counts, values and reasons. Copies/aliases/conflicting/failed/corrupt same-mode
+  project claims sharing name or OpenML ID across versions are all rejected;
+  no score/mtime/input-order preference. Empty selection retains a report and
+  `NoAcceptedResults.report`; no CSV on zero accepted.
+- [Script](../scripts/build_meta_dataset.py) exposes default/explicit `--report`,
+  counts, clear errors and output/input collision checks. Existing APIs cannot
+  bypass validation: False is validated canonical-smoke-only development, with
+  persistent `development_only`/`result_mode` markers. Explicit development API
+  and `--allow-smoke` reject full inputs; script requires `.development.csv` and
+  defaults to results/development. Ordinary numeric predictor selection refuses
+  the string mode marker. Schemas describe canonical success and diagnostic
+  envelopes; static parity tests check signature, candidate maps, required shapes
+  and local refs. No JSON Schema runtime dependency was added or claimed executed.
+
+**Changed files / compatibility.** Production:
+`src/model_recommender/result_validation.py`, `src/model_recommender/meta_dataset.py`,
+`scripts/build_meta_dataset.py`; schemas `model_run.schema.json`,
+`meta_dataset.schema.json`; synthetic helper `tests/benchmark_artifacts.py`,
+`test_result_admission.py`, `test_result_selection.py`, `test_build_meta_dataset.py`,
+`test_result_schema.py`, updated `test_meta_dataset.py` and `test_runner.py`.
+Documentation: new [result-admission.md](result-admission.md), this log,
+TASK_BACKLOG, MASTER_PLAN and TEST_AND_ACCEPTANCE_PLAN current-status navigation.
+Historical audit/evidence and D001–D020 decisions not rewritten. Old incomplete
+artifacts/aggregate-only fixtures are ineligible; adding flags is not migration.
+Original artifacts preserved; complete fixtures are synthetic `test:` namespace
+engineering evidence, never scientific outputs. See the contract for commands,
+duplicate resolution and existing-CSV behavior after failure.
+
+**New local evidence (Windows, existing locked Python3.14.7, exits0):**
+
+```powershell
+$env:UV_CACHE_DIR = Join-Path (Get-Location) 'artifacts/uv_cache'
+$env:TEMP = Join-Path (Get-Location) 'artifacts/p033006/temp'
+$env:TMP = $env:TEMP
+New-Item -ItemType Directory -Force -Path $env:TEMP,'artifacts/p033006/tests' | Out-Null
+uv run --locked --offline pytest -q tests/test_result_admission.py tests/test_result_selection.py tests/test_meta_dataset.py tests/test_build_meta_dataset.py tests/test_result_schema.py --basetemp=artifacts/p033006/tests/block3-focused-final --tb=short
+uv run --locked --offline pytest -q tests/test_model_families.py tests/test_runner.py tests/test_preprocessing.py --basetemp=artifacts/p033006/tests/parity-preprocessing-final --tb=short
+uv run --locked --offline pytest -q --basetemp=artifacts/p033006/tests/block3-publish --tb=short
+uv run --locked --offline ruff check .
+uv run --locked --offline ruff format --check .
+uv lock --check --offline
+git diff --check
+```
+
+Actual: **120 focused passed/8.85s**, **95 model/runner/preprocessing passed/12.07s**
+(41+54 preserved), **249 full-suite passed/15.07s**, versus historical132.
+Ruff all checks passed, final local format74 units, lock19 packages. Default conftest
+socket guard retained; disposable basetemp parent created before tests. Block1
+full201/16.48s and block2 full219/13.23s also passed before their commits; local
+import/line-length lint findings fixed before publication. Affected Markdown
+paths/anchors/table widths/task/requirement IDs, diff/staged whitespace and full
+logical diffs reviewed per block. This is self-review, not independent human
+research acceptance. Project Python/dependencies/lock, scientific configs,
+candidate factories, frozen protocol, registry/source pins and production runner
+were unchanged; no dataset download, real smoke/full/benchmark or upstream run.
+
+**Published small commits / actual Windows and Ubuntu CI:**
+
+| Commit / contents | Actual CI and evidence |
+|---|---|
+| `a544960` — canonical validator, complete synthetic helper, regressions and runner-output compatibility | [41218920609](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41218920609): success both OS, all mandatory jobs/steps; Windows201 passed9.74s/4.43s, Ubuntu201 passed4.36s/2.29s |
+| `33d26f9` — deterministic selection/report, reject-all duplicate policy, research builder/API and admission contract | [41219195588](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41219195588): success both OS/steps; Windows219 passed8.67s/4.13s, Ubuntu219 passed7.69s/4.55s |
+| `b9eb084` — script/API/development boundary, schema parity and compatibility/edge arithmetic tests | [41220083060](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41220083060): success both OS/steps; Windows249 passed11.20s/6.29s, Ubuntu249 passed4.88s/2.67s |
+
+Each commit pushed with `git push origin main`, branch checked before each commit
+and push; previous CI completed before next push. Jobs/steps and actual log test
+summaries inspected; install/lock/lint/format and both offline suite steps green.
+No CI failure or blind rerun. Final documentation/status reconciliation is a
+separate commit; its exact SHA and actual final CI are reported in the completion
+handoff/Git history rather than inventing a future self-reference here.
+
+**Status / remaining gates.** P033-006 DONE within the card's recorded v1 admission
+scope; P033-007 READY and unstarted. Ten v1 descriptors are required, numeric
+extensions remain possible; reserved structural field collisions are rejected,
+but this is not the predictor allowlist/general-clinical fence. Source-identifier
+duplicate policy does not implement row/cohort/group/symmetry logic P033-008/009.
+Recorded identifiers cannot certify registry/raw-source lineage, actual row
+partitions, code/config/env/checksum identity or completed physical fits; full
+provenance/atomic recovery is P033-011. Broader production failures/warnings and
+real source/benchmark readiness require their own evidence. Tic-tac-toe primary
+eligibility pending symmetry review, Spambase missingness disagreement and other
+source limitations unchanged. Matrix guard concerns individual output matrices,
+not total RSS. T05/T06/G1 remain open for these broader gates; P033-023 DECISION,
+accepted Ridge/LOGO does not replace its prospective manifest. No subsequent
+task was started.
+
 ## 2026-10-31 — P033-005 Protocol and candidate parity
 
 Выполнена только [P033-005](TASK_BACKLOG.md#p033-005--protocol-and-candidate-parity):

@@ -28,8 +28,19 @@ mean-inner-BA/tie selection, exact paired rows и refit проверены synth
 Windows/Ubuntu green. Production code/settings/lock/frozen0.1 не менялись.
 [Acceptance/remaining gates](TASK_BACKLOG.md#p033-005--protocol-and-candidate-parity),
 [новое evidence и CI](research_log.md#2026-10-31--p033-005-protocol-and-candidate-parity).
-P033-006 READY по deps, не начата; admission/failures/source gates ещё открыты,
+На завершение P033-005 P033-006 была READY, не начата; её новое evidence ниже.
 P033-023 DECISION. Реальные datasets/benchmarks/upstream не запускались.
+
+**Обновление P033-006, 2026-10-31:** strict v1 result admission DONE:
+canonical signature/candidates/folds/refits/numeric/arithmetic/descriptor evidence,
+deterministic accepted/rejected ledger и source-ID duplicate policy, strict builder
+и marked smoke-only development compatibility. 120 focused,95 existing
+parity/preprocessing и full offline249 passed; implementation Windows/Ubuntu CI
+green. [Acceptance/remaining gates](TASK_BACKLOG.md#p033-006--strict-result-admission),
+[contracts/compatibility](result-admission.md),
+[новое evidence/CI](research_log.md#2026-10-31--p033-006-strict-result-admission).
+P033-007 READY и не начата; full provenance/recovery, source/split/cohort gates и
+broader runner failures остаются открыты. T05/T06/G1 целиком не закрыты.
 
 ## 1. Как пользоваться комплектом
 
@@ -49,7 +60,7 @@ Engineering foundation уже существует: pinned5 OpenML registry, raw
 
 **Не подтверждено:** real OpenML download/smoke/full и upstream numerical reproduction. **Нет:** реальных benchmark outputs, достаточного meta-dataset, trained/exported recommender, clinical transfer, uncertainty/ablation results, final figures/report/slides. `clinical.py`/`reporting.py` и два scripts — placeholders; registry/openml_loader отдельные модули docstring-only, работающий loader находится в datasets.py.
 
-P0 fixes до expensive runs: result admission mixed smoke/full и fake full; explicit feature allowlist и clinical fence; split_strategy gate и source-level leakage policy; meaningful runner failure tests. Synthetic preprocessing checks выполнены в P033-004. Provenance/recovery добавить до expanded runs. Никакой subjective «проект готов на72%»: software base существенная, empirical research пока на подготовительном этапе, финальная сдача не собрана.
+P0 fixes до expensive runs: explicit feature allowlist и clinical fence; split_strategy gate и source-level leakage policy; meaningful runner failure tests. Mixed/fake-full recorded-result admission выполнен в P033-006; synthetic preprocessing checks — в P033-004. Full provenance/recovery остаётся P033-011 до expensive full. Никакой subjective «проект готов на72%»: software base существенная, empirical research пока на подготовительном этапе, финальная сдача не собрана.
 
 **OFFICIAL:** отдельной university specification/rubric в репозитории нет. ID/title/contributors/objective получены из задания пользователя; deadline, grading weights, mandatory dataset count/report length неизвестны. **REPOSITORY DECISION:** binary HistGBDT vs MLP, BA,3 repeated outer holdouts,3 inner folds,20 candidates и margin.01. **RESEARCH RECOMMENDATION:** strict validation, uncertainty, compact features, Tier B20–30 general datasets/3–5 clinical cohorts. **OPTIONAL:** broader architectures, GUI/API service, landmarking, extensive upstream reproduction. Scope может уменьшаться по ресурсам, но scientific validity не optional.
 
@@ -299,4 +310,4 @@ Full compute0.1:5 datasets1830 fits;20=7320;30=10980;60=21960. При hypothetic
 
 Завершение означает: (1) принят scope/прояснены unknown official requirements; (2) licensed/versioned/audited registry и source/family/split evidence; (3) real complete paired benchmarks в frozen protocols; (4) valid meta-table с source provenance, без clinical/feature leakage; (5) held-out family comparisons со всеми baselines и raw regret/uncertainty; (6) trained/exported general-only recommender с tested labelled inference/fallback; (7) independent clinical zero-shot results/limitations; (8) RQ1–3 answers включают negative/inconclusive findings; (9) final figures/report/presentation/demo sourced from saved artifacts; (10) independent clean-clone test и completed traceability/submission checklist без unresolvedP0. Необязательная победа рекомендателя, универсальный family-level вывод и полное воспроизведение всех upstream experiments в это определение не входят.
 
-P033-001 завершена в пределах documentation baseline; P033-002 завершена в environment/CI scope с [evidence](reproducibility.md#portable-locked-setup-p033-002); P033-003 source review завершён с [ограничениями admission](data_dictionary.md#family-and-admission-conclusions); P033-004 завершена в [synthetic preprocessing scope](TASK_BACKLOG.md#p033-004--preprocessor-edgeleakage-verification). Следующий шаг — **P033-005 (READY, не начата)** из [backlog](TASK_BACKLOG.md). Открытые внешние Q01/Q02/Q06/Q08/Q09/Q11 и будущие research checks не блокируют её synthetic protocol/candidate verification. P033-023 остаётся DECISION и должна зарегистрировать полный evaluation manifest до P033-018/final results; выбор Ridge/LOGO в baseline не означает её completion. Dataset downloads и experiments — последующие задачи после соответствующих gates.
+P033-001…006 завершены в acceptance scope [карточек backlog](TASK_BACKLOG.md); новое evidence P033-006 и compatibility — в [research log](research_log.md#2026-10-31--p033-006-strict-result-admission) и [admission contract](result-admission.md). Следующий шаг — **P033-007 (READY, не начата)**: predictor allowlist и general/clinical fence. Открытые внешние Q01/Q02/Q06/Q08/Q09/Q11 и будущие research checks не блокируют её offline fixtures. P033-023 остаётся DECISION и должна зарегистрировать полный evaluation manifest до P033-018/final results; выбор Ridge/LOGO в baseline не означает её completion. Dataset downloads и experiments — последующие задачи после соответствующих gates.
