@@ -19,7 +19,17 @@ P033-023 остаётся DECISION. Ниже roadmap и audit baseline
 direct-transform guard и readiness после failed refit. Windows/Ubuntu CI green.
 [Acceptance/remaining gaps](TASK_BACKLOG.md#p033-004--preprocessor-edgeleakage-verification),
 [новое evidence и CI](research_log.md#2026-10-31--p033-004-preprocessor-edgeleakage-verification).
-Следующая P033-005 READY, не начата; total RSS и source-level leakage не доказаны.
+Total RSS и source-level leakage не доказаны.
+
+**Обновление P033-005, 2026-10-31:** protocol/candidate/selection parity DONE:
+54/27 search spaces, deterministic20+20, model/TOML settings, full/smoke signatures,
+mean-inner-BA/tie selection, exact paired rows и refit проверены synthetic stubs.
+41 focused tests, preprocessing54 и full offline132 passed; implementation CI
+Windows/Ubuntu green. Production code/settings/lock/frozen0.1 не менялись.
+[Acceptance/remaining gates](TASK_BACKLOG.md#p033-005--protocol-and-candidate-parity),
+[новое evidence и CI](research_log.md#2026-10-31--p033-005-protocol-and-candidate-parity).
+P033-006 READY по deps, не начата; admission/failures/source gates ещё открыты,
+P033-023 DECISION. Реальные datasets/benchmarks/upstream не запускались.
 
 ## 1. Как пользоваться комплектом
 
@@ -97,7 +107,7 @@ scripts/                         existing entry scripts reused, placeholders com
 schemas/                         existing3 schemas tightened/versioned
 tests/                           existing tests expanded; new tests only for new contracts
   test_preprocessing.py           54 synthetic checks, P033-004
-  test_model_families.py          planned PH3
+  test_model_families.py          27 candidate/settings parity checks, P033-005
   test_cli.py                     planned PH3/14
   test_statistics.py              planned PH13
   test_inference.py               planned PH9/14

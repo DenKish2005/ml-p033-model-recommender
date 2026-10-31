@@ -1,5 +1,130 @@
 # Research Log
 
+## 2026-10-31 — P033-005 Protocol and candidate parity
+
+Выполнена только [P033-005](TASK_BACKLOG.md#p033-005--protocol-and-candidate-parity):
+candidate/settings/signature/selection/partition success-path subset T04, relevant
+T03/T08/T09. Traceability: FR-010 train-only/paired identity, FR-011 candidate
+determinism/parity, FR-012 canonical configuration and development-only smoke,
+FR-013 inner selection/refit, FR-014 hand BA/AUC and FR-039 offline checks;
+NFR-002 candidate/split determinism (не research-score reproducibility),
+NFR-003/004/007/010/013/018/020 в пределах этих checks. Broader FR-012 artifact
+admission и FR-015 failure semantics здесь не закрыты. Это новое evidence,
+отдельно от historical audit35, P033-002 suite38 и P033-004 suite92.
+
+**Baseline/navigation.** Initial main clean; `git fetch origin` подтвердил
+`main=origin/main=97ec721e1f145c1b0ff0e4c15ca858d89fda6fd1`. Применимых AGENTS.md
+в ancestors/рабочем дереве не найдено. Graphify skill/README прочитаны, interpreter
+отдельный от project env. Из реального vocabulary выбраны `candidate sampling
+baseline protocol inner selection paired partitions refit`; query budget2000
+дал163 nodes,53 показаны (truncated). Навигационные источники: paired partitions
+в protocol/Splits, candidates_for_family/model_families и _tune_family/_refit_family
+в runner. Snapshot564 nodes/1124 links/39 communities отражает source b8505f4;
+conclusions проверены по current code/config/tests/docs. Snapshot не обновлялся,
+query/cache artifacts не включены в commits. До edits locked offline suite:
+**92 passed / 25.41s**. Python3.14.7, uv0.12.18 и dependencies/lock сохранены.
+Дата — Asia/Qyzylorda; active time отдельно не измерялось.
+
+**Новые contracts/evidence.**
+
+- Independent expected SEARCH/BASELINE/SETTINGS из frozen0.1 проверяют все
+  Cartesian values (GBDT54, MLP27), baseline0, model/family/order, default20
+  distinct candidates, same seed/count/order, changed non-baseline sample,
+  without-replacement/full-grid, count1/invalid boundaries и unknown family.
+  Изменение returned dictionaries не затрагивает globals/other candidates/calls.
+- Все explicit TOML model settings, search и baseline сверены с independent
+  expected values и factories; exact key sets не позволяют silently skip fields.
+  TOML hidden_layer_sizes lists явно преобразуются в tuples; Python candidates
+  сохраняют tuples. Constructors для всех54/27 candidates и outer seeds42/137/2026:
+  correct class/params/random_state, GBDT max_iter200, MLP max_iter500/adam/relu,
+  early_stopping=False, scaling только DNN. Остальные params сравниваются
+  отдельно с defaults installed locked sklearn1.9.1; estimators здесь не fit.
+- Full signature42/137/2026, .25, inner3,20/family, tuning42,536870912 B, margin.01;
+  smoke42/.25/inner2/2 candidates. Experiment TOML parity и unknown-name errors.
+  Arithmetic и actual stub ledger различают full360 inner fits+6 refits и smoke8+2.
+- Real train_test_split/StratifiedKFold и preprocessing; estimator fits/scores
+  controlled. Shuffled non-positional row IDs, complete matrices-to-raw-row map,
+  y-index/value assertions и exact ordered ledgers сравнивают каждую family,
+  candidate/fold, outer refit/scoring. Preprocessor structure/scaler fit только
+  inner train/outer train, descriptors только raw outer train; valid/test не fit.
+  Проверены tuning seed42/order reuse и estimator outer seed. Selected candidate
+  refit на всех60 outer-training rows и score только на20 outer-test rows.
+- Literal mean-inner-BA winner. Baseline имеет лучший отдельный fold, last fold
+  в full и AUC, но меньший mean BA. Меняющиеся outer-score preferences не меняют
+  winner; outer scoring вызывается только для selected candidate. Winners меняются
+  на outer seed137, sampling order остаётся тем же. Exact .5 tie с порядком списка
+  [7,2,5] выбирает candidate_order2, независимо от list-first/AUC/last-fold.
+  Hand confusion fixture: specificity3/4, sensitivity1/2 → BA.625; positive-class
+  AUC6/8=.75. Existing real-estimator synthetic runner regression сохранён.
+
+**Mutation evidence/defects.** Temporary script под ignored artifacts/p033005
+поменял GBDT max_iter200→201, MLP baseline hidden (32,16)→(32,17) и full
+inner_folds3→4 по одному. Каждый actual pytest дал1 failed именно на value
+assertion; каждый config восстановлен original bytes через finally, после
+восстановления focused **34 passed / 7.76s**. Первый wrapper излишне требовал
+слово AssertionError в pytest output; исправлен только ignored probe wrapper,
+затем три probes повторены успешно. Намеренный drift не commit/push.
+**Production defects не выявлены, fixes не требовались**: src/configs/schemas,
+registry/pins, frozen protocol/decisions, pyproject/Python/lock без изменений.
+
+**Финальная локальная проверка (Windows, existing locked env, exits0):**
+
+```powershell
+$env:UV_CACHE_DIR = Join-Path (Get-Location) 'artifacts/uv_cache'
+$env:TEMP = Join-Path (Get-Location) 'artifacts/p033005/temp'
+$env:TMP = $env:TEMP
+New-Item -ItemType Directory -Force -Path $env:TEMP,'artifacts/p033005/tests' | Out-Null
+uv run --locked --offline pytest -q tests/test_model_families.py tests/test_runner.py --basetemp=artifacts/p033005/tests/focused-final --tb=short
+uv run --locked --offline pytest -q tests/test_preprocessing.py --basetemp=artifacts/p033005/tests/preprocessing-final --tb=short
+uv run --locked --offline pytest -q --basetemp=artifacts/p033005/tests/full-final --tb=short
+uv run --locked --offline ruff check .
+uv run --locked --offline ruff format --check .
+uv lock --check --offline
+git diff --check
+```
+
+Actual: **41 focused passed / 10.98s** (27 model +14 runner), **54 preprocessing
+passed / 7.87s**, **132 full-suite passed / 12.29s** = prior92 +40 new cases.
+Ruff all checks passed; format68 files already formatted; lock19 resolved.
+Default conftest socket guard сохранён, disposable basetemp parent создан заранее.
+Docs paths/anchors/table widths/task/requirement IDs и diff/cached whitespace
+проверены; self-review, без заявления independent human acceptance.
+
+**Небольшие commits, push и actual CI (Windows и Ubuntu jobs/steps):**
+
+- `0f8aa89` — `test(models): verify frozen candidate grids and sampling`:
+  candidate block18 green; [CI 41217173010](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41217173010)
+  success, обе OS, install/lock/lint/format и два offline pytest steps.
+- `4c07222` — `test(protocol): check model and benchmark settings against TOML`:
+  estimator/default/TOML/signature parity и restored-drift verification;
+  [CI 41217435064](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41217435064)
+  success, обе OS и все обязательные steps.
+- `d14e0e0` — `test(runner): verify inner selection and paired partitions`:
+  controlled selection/tie/partitions/refit ledger и hand BA/AUC;
+  [CI 41217726546](https://github.com/DenKish2005/ml-p033-model-recommender/actions/runs/41217726546)
+  success, обе OS и все обязательные steps. Actual logs: Windows132 passed /
+  10.31s и5.05s; Ubuntu132 passed / 4.95s и2.34s; lock/lint/format green.
+- Завершающий `docs(plan): record P033-005 verification and remaining gates`:
+  backlog/research log и current master/test-plan navigation; hash и final CI
+  берутся из Git history/completion handoff, будущая self-reference не выдумана.
+
+Каждый implementation block проверен локально, diff/staged review и explicit
+file staging, main перед commit и каждым `git push origin main`. Push success;
+между push дожидались Windows/Ubuntu CI предыдущего. Branches/PR/force/amend/
+reset не использовались; чужих изменений не было. Historical audit/decisions
+сохранены. Docs обновлены только в статусе, evidence и remaining gates.
+
+**Результат/пределы.** P033-005 DONE в scope своей карточки. P033-006 READY по
+dependency005, не начата; P033-023 DECISION. Fake/reduced-full admission не
+проверяется этими full-configuration stubs; stub output не published research
+artifact. Failed trial/refit/non-finite/warning paths, admission/provenance/schema
+и split-strategy/duplicate/group/source policies остаются P033-006/008/009/011/019.
+Tic-tac-toe primary eligibility pending symmetry review и Spambase missingness
+disagreement сохранены. P033-003 source admission не равно benchmark readiness;
+unit tests не исключают semantic leakage. Matrix limit относится к отдельному
+output matrix, не total RSS. Реальные datasets/smoke/full/benchmarks/upstream не
+скачивались/не запускались, resource/clinical/evaluation gates и весь G1 не закрыты.
+
 ## 2026-10-31 — P033-004 Preprocessor edge/leakage verification
 
 Выполнена только [P033-004](TASK_BACKLOG.md#p033-004--preprocessor-edgeleakage-verification):
