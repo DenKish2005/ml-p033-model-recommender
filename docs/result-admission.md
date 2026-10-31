@@ -14,10 +14,18 @@ outer-training descriptor means must agree. Arithmetic uses absolute tolerance
 the recorded scores, not for rounded result tables. Signature/parameters/counts
 are exact; booleans are never numbers. MLP JSON arrays and Python tuples have the
 same parameter meaning. Exact ties use recomputed, unrounded inner means.
+Counts/IDs must be integer tokens in the interoperable range `0..2**53-1`
+(positive where required); integral floats and arbitrarily large JSON integers
+are rejected before arithmetic.
+The minority fraction must match an integer outer-training class count sufficient
+for inner CV. Imbalance ratio is checked from those counts, avoiding numerical
+cancellation from `(1-p)/p` for a highly imbalanced but valid dataset.
 
 The ten existing v1 descriptors are required and their recorded aggregation is
 checked; extra numeric descriptors remain possible under v1. This is not the
 predictor allowlist or clinical-training fence of P033-007.
+Descriptor names cannot overwrite structural row identifiers/outcomes or the
+development markers. Other numeric extensions remain permitted.
 
 ## Selection and report
 
@@ -53,6 +61,49 @@ written even when all inputs are rejected. In that case `NoAcceptedResults`
 contains `.report` and the builder raises instead of creating an empty table.
 No inputs produces the same explicit zero-count error/report. A report cannot
 overwrite an input artifact.
+
+## Builder and development compatibility
+
+The [builder script](../scripts/build_meta_dataset.py) writes primary CSV rows
+only from accepted canonical full artifacts. The JSON report defaults to the
+output stem plus `.admission.json`; `--report` chooses a different location.
+Keep it outside the input JSON directory so that a later glob does not ingest
+the report as a benchmark. The script prints accepted/rejected counts and the
+report path. Empty/all-rejected input exits 2 after writing the report and creates
+no CSV. Existing CSVs are preserved on admission failure; the error/report must
+be resolved before reusing a previous output. Output/report/input collisions are
+rejected before writing.
+
+```text
+uv run --locked --offline python scripts/build_meta_dataset.py --results-dir results/raw_model_runs --output results/meta_dataset.csv --report results/manifests/meta_dataset.admission.json
+uv run --locked --offline python scripts/build_meta_dataset.py --results-dir results/development/smoke --allow-smoke
+```
+
+`--allow-smoke` now selects **only validated canonical smoke** artifacts. It
+rejects full inputs even when they are valid, rather than mixing research and
+development rows. Default output is
+`results/development/meta_dataset.development.csv`; explicit development output
+names must end in `.development.csv`. Every row has `development_only=true` and
+`result_mode=smoke`, and the report also identifies development mode.
+
+The explicit API is `build_development_meta_dataset(paths, report_path=...)`.
+For compatibility, `require_research_valid=False` on either existing public API
+means this validated smoke-only mode, never unrestricted conversion. Reduced
+custom protocols, corrupt smoke, spoofed flags and full inputs cannot bypass
+validation through it. Development markers persist into CSV; the existing
+numeric feature selector refuses `result_mode` as a predictor. Such tables are
+for engineering use, not research inputs or conclusions. This narrow boundary
+does not implement the future general/clinical or predictor allowlist fences.
+
+The [model-run schema](../schemas/model_run.schema.json) describes canonical
+success structure, signature, exact sampled params/order and complete counts;
+excluded diagnostic envelopes remain non-admitted. Runtime adds arithmetic,
+selection/ties, integer-token, finite and matrix/descriptor consistency checks.
+The [meta-row schema](../schemas/meta_dataset.schema.json) describes research v1
+rows and rejects development markers. JSON Schema alone does not perform
+admission, duplicate detection or provenance verification. Static schema/runtime
+parity tests cover local references, signatures, candidate maps and required
+shapes; the locked environment has no third-party JSON Schema validator.
 
 ## Compatibility
 

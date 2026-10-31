@@ -164,8 +164,15 @@ def benchmark_result_to_row(
     *,
     require_research_valid: bool = True,
 ) -> dict[str, object]:
-    if require_research_valid:
-        validate_benchmark_result(result)
+    """Convert full research evidence, or smoke-only marked development evidence.
+
+    Compatibility: False now means validated canonical smoke only, never bypass.
+    """
+    if type(require_research_valid) is not bool:
+        raise ValueError("require_research_valid must be a boolean.")
+    validate_benchmark_result(
+        result, BenchmarkProtocol.full() if require_research_valid else BenchmarkProtocol.smoke()
+    )
     aggregate = result.get("aggregate")
     if not isinstance(aggregate, dict):
         raise ValueError("Benchmark result has no aggregate scores.")
@@ -175,7 +182,7 @@ def benchmark_result_to_row(
     meta = aggregate.get("meta_features_mean_over_outer_training_partitions")
     if not isinstance(meta, dict):
         raise ValueError("Benchmark aggregate has no meta-features.")
-    return {
+    row = {
         "dataset": dataset["name"],
         "openml_id": dataset["openml_id"],
         "version": dataset["version"],
@@ -188,6 +195,9 @@ def benchmark_result_to_row(
         "actual_best_pipeline": aggregate["actual_best_pipeline"],
         "near_tie_within_margin": aggregate["near_tie_within_margin"],
     }
+    if not require_research_valid:
+        row.update(development_only=True, result_mode="smoke")
+    return row
 
 
 def build_meta_dataset(
@@ -196,6 +206,9 @@ def build_meta_dataset(
     require_research_valid: bool = True,
     report_path: Path | None = None,
 ) -> pd.DataFrame:
+    """Build research rows; False is a compatibility alias for smoke-only development."""
+    if type(require_research_valid) is not bool:
+        raise ValueError("require_research_valid must be a boolean.")
     selection = (
         select_research_results(result_files)
         if require_research_valid
@@ -217,6 +230,13 @@ def build_meta_dataset(
     frame = pd.DataFrame(rows).sort_values("dataset").reset_index(drop=True)
     frame.attrs["admission_report"] = selection.report
     return frame
+
+
+def build_development_meta_dataset(
+    result_files: list[Path], *, report_path: Path | None = None
+) -> pd.DataFrame:
+    """Build marked canonical-smoke rows only; full inputs are rejected, not mixed."""
+    return build_meta_dataset(result_files, require_research_valid=False, report_path=report_path)
 
 
 def meta_feature_columns(frame: pd.DataFrame) -> list[str]:

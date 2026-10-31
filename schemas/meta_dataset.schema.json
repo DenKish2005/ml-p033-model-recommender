@@ -1,26 +1,130 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "P033 Meta-Dataset Row",
+  "title": "P033 admitted research meta-dataset row (v1)",
+  "description": "Research rows only. Extra numeric v1 descriptors are permitted; predictor allowlist/clinical fence remain P033-007. Runtime checks source admission and arithmetic before constructing rows.",
   "type": "object",
   "required": [
     "dataset",
+    "openml_id",
+    "version",
     "family",
     "clinical",
+    "n_samples",
+    "n_features",
+    "n_classes",
+    "samples_per_feature",
+    "categorical_fraction",
+    "missing_fraction",
+    "rows_with_missing_fraction",
+    "constant_feature_fraction",
+    "minority_class_fraction",
+    "imbalance_ratio",
     "mean_balanced_accuracy_gbdt",
     "mean_balanced_accuracy_mlp",
-    "performance_gap_mlp_minus_gbdt"
+    "performance_gap_mlp_minus_gbdt",
+    "actual_best_pipeline",
+    "near_tie_within_margin"
   ],
   "properties": {
-    "dataset": {"type": "string"},
-    "openml_id": {"type": "integer"},
-    "version": {"type": "integer"},
-    "family": {"type": "string"},
-    "clinical": {"type": "boolean"},
-    "mean_balanced_accuracy_gbdt": {"type": "number"},
-    "mean_balanced_accuracy_mlp": {"type": "number"},
-    "performance_gap_mlp_minus_gbdt": {"type": "number"},
-    "actual_best_pipeline": {"enum": ["GBDT", "DNN"]},
-    "near_tie_within_margin": {"type": "boolean"}
+    "dataset": {
+      "type": "string",
+      "minLength": 1
+    },
+    "openml_id": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clinical": {
+      "type": "boolean"
+    },
+    "n_samples": {
+      "type": "number",
+      "minimum": 1
+    },
+    "n_features": {
+      "type": "number",
+      "minimum": 1
+    },
+    "n_classes": {
+      "const": 2
+    },
+    "samples_per_feature": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMinimum": 0
+    },
+    "categorical_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "missing_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "rows_with_missing_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "constant_feature_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "minority_class_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.5,
+      "exclusiveMinimum": 0
+    },
+    "imbalance_ratio": {
+      "type": "number",
+      "minimum": 1
+    },
+    "mean_balanced_accuracy_gbdt": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "mean_balanced_accuracy_mlp": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "performance_gap_mlp_minus_gbdt": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1
+    },
+    "actual_best_pipeline": {
+      "enum": [
+        "GBDT",
+        "DNN"
+      ]
+    },
+    "near_tie_within_margin": {
+      "type": "boolean"
+    },
+    "development_only": {
+      "const": false
+    },
+    "result_mode": {
+      "const": "full"
+    }
   },
-  "additionalProperties": true
+  "additionalProperties": {
+    "type": "number"
+  }
 }

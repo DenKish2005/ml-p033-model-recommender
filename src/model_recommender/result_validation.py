@@ -23,6 +23,20 @@ V1_META_KEYS = {
     "minority_class_fraction",
     "imbalance_ratio",
 }
+ROW_FIELDS = {
+    "dataset",
+    "openml_id",
+    "version",
+    "family",
+    "clinical",
+    "development_only",
+    "result_mode",
+    "mean_balanced_accuracy_gbdt",
+    "mean_balanced_accuracy_mlp",
+    "performance_gap_mlp_minus_gbdt",
+    "actual_best_pipeline",
+    "near_tie_within_margin",
+}
 
 
 def _require(condition, path, reason):
@@ -47,6 +61,7 @@ def _number(value, path, low=0, high=float("inf")):
 
 def _integer(value, path, low=0):
     _require(type(value) is int and value >= low, path, f"required integer >= {low}")
+    _number(value, path, low, 2**53 - 1)
     return value
 
 
@@ -116,13 +131,16 @@ def _matrix(value, row_counts, limit, path):
         )
 
 
-def _meta(value, train_rows, path):
+def _meta(value, train_rows, minimum_class_rows, path):
     value = _object(value, path)
     _require(V1_META_KEYS <= value.keys(), path, "missing v1 outer-training descriptors")
+    _require(
+        not ROW_FIELDS.intersection(value), path, "descriptor collides with row metadata/outcomes"
+    )
     # v1 permits additional numeric descriptors. Predictor allowlisting is P033-007.
     for key, number in value.items():
         _require(isinstance(key, str) and bool(key), path, "descriptor keys must be strings")
-        _number(number, f"{path}.{key}")
+        _number(number, f"{path}.{key}", -float("inf"))
     for key in ("n_samples", "n_features", "n_classes"):
         _integer(value[key], f"{path}.{key}", 1)
     _same(value["n_samples"], train_rows, f"{path}.n_samples")
@@ -132,12 +150,23 @@ def _meta(value, train_rows, path):
         train_rows / value["n_features"],
         f"{path}.samples_per_feature",
     )
-    for key in V1_META_KEYS:
+    for key in sorted(V1_META_KEYS):
         if key.endswith("_fraction"):
             _number(value[key], f"{path}.{key}", 0, 1)
     minority = _number(value["minority_class_fraction"], f"{path}.minority_class_fraction", 0, 0.5)
-    _require(minority > 0, path, "binary minority fraction must be positive")
-    _arithmetic(value["imbalance_ratio"], (1 - minority) / minority, f"{path}.imbalance_ratio", 1)
+    minority_rows = round(minority * train_rows)
+    _require(
+        minority_rows >= minimum_class_rows, path, "minority class must support every inner fold"
+    )
+    _arithmetic(minority, minority_rows / train_rows, f"{path}.minority_class_fraction", 0, 0.5)
+    # Reconstruct counts, not a ratio of rounded fractions: at high imbalance
+    # (1-p)/p loses more than score atol despite perfectly valid runner evidence.
+    _arithmetic(
+        value["imbalance_ratio"],
+        (train_rows - minority_rows) / minority_rows,
+        f"{path}.imbalance_ratio",
+        1,
+    )
     return value
 
 
@@ -226,10 +255,14 @@ def validate_benchmark_result(result, expected_protocol: BenchmarkProtocol | Non
     Raises ValueError with a field path. Does not modify or repair the input.
     Custom/reduced protocols cannot redefine research admission.
     """
-    protocol = expected_protocol or BenchmarkProtocol.full()
+    protocol = BenchmarkProtocol.full() if expected_protocol is None else expected_protocol
     _require(isinstance(protocol, BenchmarkProtocol), "expected_protocol", "required protocol")
     canonical = {"full": BenchmarkProtocol.full(), "smoke": BenchmarkProtocol.smoke()}
-    _require(protocol.name in canonical, "expected_protocol", "unsupported protocol")
+    _require(
+        isinstance(protocol.name, str) and protocol.name in canonical,
+        "expected_protocol",
+        "unsupported protocol",
+    )
     _same(asdict(protocol), asdict(canonical[protocol.name]), "expected_protocol")
     result = _object(result, "result")
     _same(result.get("project"), "CSCI447P033", "project")
@@ -269,7 +302,9 @@ def validate_benchmark_result(result, expected_protocol: BenchmarkProtocol | Non
             "outer holdout row counts mismatch",
         )
         _same(split.get("paired_success"), True, f"{path}.paired_success")
-        descriptors.append(_meta(split.get("meta_features"), train, f"{path}.meta_features"))
+        descriptors.append(
+            _meta(split.get("meta_features"), train, protocol.inner_folds, f"{path}.meta_features")
+        )
         families = _object(split.get("families"), f"{path}.families")
         _require(families.keys() == scores.keys(), f"{path}.families", "required both families")
         for family in scores:
@@ -325,5 +360,8 @@ def validate_benchmark_result(result, expected_protocol: BenchmarkProtocol | Non
     )
     for key, value in meta.items():
         _arithmetic(
-            value, _mean([item[key] for item in descriptors]), f"aggregate.meta_features.{key}"
+            value,
+            _mean([item[key] for item in descriptors]),
+            f"aggregate.meta_features.{key}",
+            -float("inf"),
         )
