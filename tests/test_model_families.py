@@ -1,15 +1,22 @@
 """Independent frozen-0.1 candidate contracts; no estimator fitting or datasets."""
 
 from itertools import product
+from pathlib import Path
+from tomllib import loads
 
 import pytest
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.neural_network import MLPClassifier
 
 from model_recommender.model_families import (
     GBDT_BASELINE,
     MLP_BASELINE,
+    ModelCandidate,
+    build_estimator,
     candidates_for_family,
     gbdt_candidates,
     mlp_candidates,
+    needs_numeric_scaling,
 )
 
 # Expected values transcribed from experiment-protocol.md, Model settings / D005.
@@ -38,6 +45,11 @@ BASELINE = {
 }
 MODELS = {"GBDT": "hist_gradient_boosting", "DNN": "mlp"}
 GRID_SIZE = {"GBDT": 54, "DNN": 27}
+ROOT = Path(__file__).resolve().parents[1]
+SETTINGS = {
+    "GBDT": {"max_iter": 200, "early_stopping": False},
+    "DNN": {"max_iter": 500, "solver": "adam", "activation": "relu", "early_stopping": False},
+}
 
 
 def parameter_key(params):
@@ -113,3 +125,57 @@ def test_mutating_returned_params_cannot_change_baseline_or_other_calls(family):
 def test_unknown_candidate_family_is_rejected(family):
     with pytest.raises(ValueError, match="Unknown model family"):
         candidates_for_family(family)
+
+
+@pytest.mark.parametrize("family,filename", [("GBDT", "gbdt.toml"), ("DNN", "dnn.toml")])
+def test_model_toml_matches_every_explicit_frozen_setting(family, filename):
+    config = loads((ROOT / "configs/models" / filename).read_text(encoding="utf-8"))
+    model = MODELS[family]
+    assert set(config) == {"family", model}
+    assert config["family"] == {"name": family, "models": [model]}
+    block = config[model]
+    assert set(block) == set(SEARCH[family]) | set(SETTINGS[family]) | {"baseline"}
+    search = {key: block[key] for key in SEARCH[family]}
+    baseline = block["baseline"].copy()
+    if family == "DNN":
+        # TOML arrays are lists; sklearn candidates deliberately use immutable tuples.
+        assert all(isinstance(value, list) for value in search["hidden_layer_sizes"])
+        assert isinstance(baseline["hidden_layer_sizes"], list)
+        search["hidden_layer_sizes"] = [tuple(value) for value in search["hidden_layer_sizes"]]
+        baseline["hidden_layer_sizes"] = tuple(baseline["hidden_layer_sizes"])
+    assert {key: tuple(values) for key, values in search.items()} == SEARCH[family]
+    assert baseline == BASELINE[family]
+    assert {key: block[key] for key in SETTINGS[family]} == SETTINGS[family]
+    # Also compare the actual Cartesian space with TOML, not just cardinalities.
+    configured = {
+        parameter_key(dict(zip(search, values, strict=True)))
+        for values in product(*search.values())
+    }
+    candidates = candidates_for_family(family, count=GRID_SIZE[family])
+    assert {parameter_key(c.params) for c in candidates} == configured
+    assert candidates[0].params == baseline
+
+
+@pytest.mark.parametrize("family", ["GBDT", "DNN"])
+@pytest.mark.parametrize("outer_seed", [42, 137, 2026])
+def test_estimator_construction_preserves_candidates_and_locked_defaults(family, outer_seed):
+    estimator_class = HistGradientBoostingClassifier if family == "GBDT" else MLPClassifier
+    for candidate in candidates_for_family(family, count=GRID_SIZE[family]):
+        estimator = build_estimator(candidate, random_state=outer_seed)
+        assert type(estimator) is estimator_class
+        # All unconfigured settings stay at the installed, locked sklearn defaults.
+        # Explicit project settings are independently fixed above, even if a default agrees.
+        expected = estimator_class().get_params() | SETTINGS[family] | candidate.params
+        expected["random_state"] = outer_seed
+        assert estimator.get_params() == expected
+        if family == "DNN":
+            assert isinstance(estimator.hidden_layer_sizes, tuple)
+    assert needs_numeric_scaling(family) is (family == "DNN")
+
+
+def test_unsupported_estimator_and_scaling_families_are_rejected():
+    candidate = ModelCandidate("unknown", "unknown", 0, {})
+    with pytest.raises(ValueError, match="Unsupported candidate family"):
+        build_estimator(candidate, random_state=42)
+    with pytest.raises(ValueError, match="Unknown model family"):
+        needs_numeric_scaling("unknown")
